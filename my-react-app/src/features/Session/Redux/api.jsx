@@ -11,7 +11,7 @@ export const sessionApi = createApi({
 
   endpoints: (builder) => ({
 
-    // GET /api/Session - קבלת כל הסשנים
+    // GET /api/Session
     getAllSessions: builder.query({
       query: () => '/Session',
       providesTags: ['Session'],
@@ -25,7 +25,7 @@ export const sessionApi = createApi({
       }
     }),
 
-    // GET /api/Session/{id} - קבלת סשן לפי ID
+    // GET /api/Session/{id}
     getSessionById: builder.query({
       query: (id) => `/Session/${id}`,
       providesTags: (result, error, id) => [{ type: 'Session', id }],
@@ -39,7 +39,7 @@ export const sessionApi = createApi({
       }
     }),
 
-    // POST /api/Session - יצירת סשן חדש (FormData)
+    // POST /api/Session
     addSession: builder.mutation({
       query: (session) => {
         const formData = new FormData();
@@ -74,7 +74,7 @@ export const sessionApi = createApi({
       }
     }),
 
-    // PUT /api/Session/{id} - עדכון סשן
+    // PUT /api/Session/{id} 
     updateSession: builder.mutation({
       query: ({ id, session }) => ({
         url: `/Session/${id}`,
@@ -109,7 +109,7 @@ export const sessionApi = createApi({
       }
     }),
 
-    // DELETE /api/Session/{id} - מחיקת סשן
+    // DELETE /api/Session/{id} 
     deleteSession: builder.mutation({
       query: (id) => ({
         url: `/Session/${id}`,
@@ -138,7 +138,7 @@ export const sessionApi = createApi({
   })
 });
 
-// Hooks לשימוש בקומפוננטות
+
 export const {
   useGetAllSessionsQuery,
   useGetSessionByIdQuery,

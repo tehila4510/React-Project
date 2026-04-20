@@ -11,7 +11,7 @@ export const questionApi = createApi({
 
   endpoints: (builder) => ({
 
-    // GET /api/Question - קבלת כל השאלות
+    // GET /api/Question
     getAllQuestions: builder.query({
       query: () => '/Question',
       providesTags: ['Question'],
@@ -27,7 +27,7 @@ export const questionApi = createApi({
       }
     }),
 
-    // GET /api/Question/{id} - קבלת שאלה לפי ID
+    // GET /api/Question/{id} 
     getQuestionById: builder.query({
       query: (id) => `/Question/${id}`,
       providesTags: (result, error, id) => [{ type: 'Question', id }],
@@ -42,7 +42,7 @@ export const questionApi = createApi({
       }
     }),
 
-    // POST /api/Question - הוספת שאלה חדשה (FormData)
+    // POST /api/Question 
     addQuestion: builder.mutation({
       query: (question) => {
         const formData = new FormData();
@@ -59,7 +59,6 @@ export const questionApi = createApi({
       invalidatesTags: ['Question'],
 
       async onQueryStarted(newQuestion, { dispatch, queryFulfilled }) {
-        // Optimistic update – מוסיף את השאלה לרשימה מיד
         const patchResult = dispatch(
           questionApi.util.updateQueryData(
             'getAllQuestions',
@@ -71,14 +70,14 @@ export const questionApi = createApi({
         );
 
         try {
-          await queryFulfilled; // מחכה לתשובת השרת
+          await queryFulfilled; 
         } catch {
-          patchResult.undo(); // מחזיר את השינוי במקרה של שגיאה
+          patchResult.undo(); 
         }
       }
     }),
 
-    // PUT /api/Question/{id} - עדכון שאלה
+    // PUT /api/Question/{id} 
     updateQuestion: builder.mutation({
       query: ({ id, question }) => ({
         url: `/Question/${id}`,
@@ -92,7 +91,6 @@ export const questionApi = createApi({
       invalidatesTags: (result, error, arg) => [{ type: 'Question', id: arg.id }],
 
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        // Optimistic update – מעדכן את השאלה ברשימה מיד
         const patchResult = dispatch(
           questionApi.util.updateQueryData(
             'getAllQuestions',
@@ -114,7 +112,7 @@ export const questionApi = createApi({
       }
     }),
 
-    // DELETE /api/Question/{id} - מחיקת שאלה
+    // DELETE /api/Question/{id}
     deleteQuestion: builder.mutation({
       query: (id) => ({
         url: `/Question/${id}`,
@@ -124,7 +122,6 @@ export const questionApi = createApi({
       invalidatesTags: ['Question'],
 
       async onQueryStarted(id, { dispatch, queryFulfilled }) {
-        // Optimistic update – מוחק את השאלה מיד
         const patchResult = dispatch(
           questionApi.util.updateQueryData(
             'getAllQuestions',
@@ -146,7 +143,6 @@ export const questionApi = createApi({
   })
 });
 
-// Hooks ל שימוש בקומפוננטות
 export const {
   useGetAllQuestionsQuery,
   useGetQuestionByIdQuery,

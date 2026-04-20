@@ -11,7 +11,7 @@ export const userSkillProgressApi = createApi({
 
   endpoints: (builder) => ({
 
-    // GET /api/UserSkillProgress - קבלת כל הסטייטים של כישורים
+    // GET /api/UserSkillProgress 
     getAllUserSkillProgress: builder.query({
       query: () => '/UserSkillProgress',
       providesTags: ['UserSkillProgress'],
@@ -25,7 +25,7 @@ export const userSkillProgressApi = createApi({
       }
     }),
 
-    // GET /api/UserSkillProgress/{id} - קבלת סטייט לפי ID
+    // GET /api/UserSkillProgress/{id} 
     getUserSkillProgressById: builder.query({
       query: (id) => `/UserSkillProgress/${id}`,
       providesTags: (result, error, id) => [{ type: 'UserSkillProgress', id }],
@@ -39,7 +39,7 @@ export const userSkillProgressApi = createApi({
       }
     }),
 
-    // POST /api/UserSkillProgress - יצירת סטייט חדש (FormData)
+    // POST /api/UserSkillProgress
     addUserSkillProgress: builder.mutation({
       query: (userSkillProgress) => {
         const formData = new FormData();
@@ -74,7 +74,7 @@ export const userSkillProgressApi = createApi({
       }
     }),
 
-    // PUT /api/UserSkillProgress/{id} - עדכון סטייט
+    // PUT /api/UserSkillProgress/{id}
     updateUserSkillProgress: builder.mutation({
       query: ({ id, userSkillProgress }) => ({
         url: `/UserSkillProgress/${id}`,
@@ -109,7 +109,7 @@ export const userSkillProgressApi = createApi({
       }
     }),
 
-    // DELETE /api/UserSkillProgress/{id} - מחיקת סטייט
+    // DELETE /api/UserSkillProgress/{id}
     deleteUserSkillProgress: builder.mutation({
       query: (id) => ({
         url: `/UserSkillProgress/${id}`,
@@ -138,7 +138,6 @@ export const userSkillProgressApi = createApi({
   })
 });
 
-// Hooks לשימוש בקומפוננטות
 export const {
   useGetAllUserSkillProgressQuery,
   useGetUserSkillProgressByIdQuery,

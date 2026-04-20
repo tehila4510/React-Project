@@ -11,7 +11,7 @@ export const questionOptionApi = createApi({
 
   endpoints: (builder) => ({
 
-    // GET /api/QuestionOption - קבלת כל האופציות
+    // GET /api/QuestionOption 
     getAllQuestionOptions: builder.query({
       query: () => '/QuestionOption',
       providesTags: ['QuestionOption'],
@@ -25,7 +25,7 @@ export const questionOptionApi = createApi({
       }
     }),
 
-    // GET /api/QuestionOption/{id} - קבלת אופציה לפי ID
+    // GET /api/QuestionOption/{id} 
     getQuestionOptionById: builder.query({
       query: (id) => `/QuestionOption/${id}`,
       providesTags: (result, error, id) => [{ type: 'QuestionOption', id }],
@@ -39,7 +39,7 @@ export const questionOptionApi = createApi({
       }
     }),
 
-    // POST /api/QuestionOption - יצירת אופציה חדשה (FormData)
+    // POST /api/QuestionOption 
     addQuestionOption: builder.mutation({
       query: (option) => {
         const formData = new FormData();
@@ -74,7 +74,7 @@ export const questionOptionApi = createApi({
       }
     }),
 
-    // PUT /api/QuestionOption/{id} - עדכון אופציה
+    // PUT /api/QuestionOption/{id} 
     updateQuestionOption: builder.mutation({
       query: ({ id, option }) => ({
         url: `/QuestionOption/${id}`,
@@ -109,7 +109,7 @@ export const questionOptionApi = createApi({
       }
     }),
 
-    // DELETE /api/QuestionOption/{id} - מחיקת אופציה
+    // DELETE /api/QuestionOption/{id} 
     deleteQuestionOption: builder.mutation({
       query: (id) => ({
         url: `/QuestionOption/${id}`,
@@ -138,7 +138,6 @@ export const questionOptionApi = createApi({
   })
 });
 
-// Hooks לשימוש בקומפוננטות
 export const {
   useGetAllQuestionOptionsQuery,
   useGetQuestionOptionByIdQuery,

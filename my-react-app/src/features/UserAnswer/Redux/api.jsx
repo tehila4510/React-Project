@@ -11,7 +11,7 @@ export const userAnswerApi = createApi({
 
   endpoints: (builder) => ({
 
-    // GET /api/UserAnswer - קבלת כל התשובות
+    // GET /api/UserAnswer
     getAllUserAnswers: builder.query({
       query: () => '/UserAnswer',
       providesTags: ['UserAnswer'],
@@ -25,7 +25,7 @@ export const userAnswerApi = createApi({
       }
     }),
 
-    // GET /api/UserAnswer/{id} - קבלת תשובה לפי ID
+    // GET /api/UserAnswer/{id}
     getUserAnswerById: builder.query({
       query: (id) => `/UserAnswer/${id}`,
       providesTags: (result, error, id) => [{ type: 'UserAnswer', id }],
@@ -39,7 +39,7 @@ export const userAnswerApi = createApi({
       }
     }),
 
-    // POST /api/UserAnswer - הוספת תשובה חדשה (FormData)
+    // POST /api/UserAnswer
     addUserAnswer: builder.mutation({
       query: (userAnswer) => {
         const formData = new FormData();
@@ -74,7 +74,7 @@ export const userAnswerApi = createApi({
       }
     }),
 
-    // PUT /api/UserAnswer/{id} - עדכון תשובה
+    // PUT /api/UserAnswer/{id}
     updateUserAnswer: builder.mutation({
       query: ({ id, userAnswer }) => ({
         url: `/UserAnswer/${id}`,
@@ -109,7 +109,7 @@ export const userAnswerApi = createApi({
       }
     }),
 
-    // DELETE /api/UserAnswer/{id} - מחיקת תשובה
+    // DELETE /api/UserAnswer/{id} 
     deleteUserAnswer: builder.mutation({
       query: (id) => ({
         url: `/UserAnswer/${id}`,
@@ -138,7 +138,6 @@ export const userAnswerApi = createApi({
   })
 });
 
-// Hooks לשימוש בקומפוננטות
 export const {
   useGetAllUserAnswersQuery,
   useGetUserAnswerByIdQuery,
