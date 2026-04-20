@@ -4,19 +4,34 @@ export const userApi = createApi({
   reducerPath: "userApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "https://localhost:7185/api/User",
+     prepareHeaders: (headers, { getState }) => {
+      const token = getState().user.token;
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+      return headers;
+    },
   }),
   tagTypes: ["Users"],
+
 
   endpoints: (builder) => ({
 
     // ---------- REGISTER ----------
     registerUser: builder.mutation({
-      query: (newUser) => ({
-        url: "/register",
-        method: "POST",
-        body: newUser,
-      }),
-    }),
+  query: (newUser) => {
+    console.log("FormData entries:");
+    for (let pair of newUser.entries()) {
+      console.log(pair[0], pair[1]);
+    }
+
+    return {
+      url: "/register",
+      method: "POST",
+      body: newUser,
+    };
+  },
+}),
 
     // ---------- LOGIN ----------
     loginUser: builder.mutation({
