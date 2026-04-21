@@ -6,6 +6,8 @@ const NAV = [
   { id: 'home',     icon: '🏠', label: 'Home' },
   { id: 'progress', icon: '📊', label: 'My Progress' },
   { id: 'errors',   icon: '❌', label: 'My Mistakes', badge: true },
+    { id: 'chat',     icon: '🦉', label: 'English Teacher' },
+
   { id: 'profile',  icon: '👤', label: 'Profile' },
   { id: 'settings', icon: '⚙️', label: 'Settings' },
 ];

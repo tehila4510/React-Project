@@ -7,6 +7,7 @@ import HomeView      from '../features/UserSkillProgress/Components/HomeView';
 import ProgressView  from '../features/UserSkillProgress/Components/ProgressView';
 import ErrorsView    from '../features/UserAnswer/Components/ErrorsView';
 import ProfileView   from '../features/User/Components/ProfileView';
+import ChatView      from '../features/Chat/Components/ChatView';
 
 import UserAvatar from '../features/User/Components/UserAvatar';
 // סגנונות
@@ -78,6 +79,8 @@ export default function GlottieApp() {
             {view === 'progress' && <ProgressView />}
             {view === 'errors'   && <ErrorsView />}
             {view === 'profile'  && <ProfileView />}
+            {view === 'chat'     && <ChatView />}
+            
 
             {(view === 'settings' || view === 'help') && (
               <div className="page" style={{
