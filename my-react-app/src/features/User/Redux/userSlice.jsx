@@ -5,18 +5,25 @@ const getSafeUser = () => {
     const saved = localStorage.getItem('user');
     if (!saved || saved === "undefined") return null;
     return JSON.parse(saved);
-  } catch (e) {
+  } catch {
     return null;
   }
 };
 
-const savedUser = getSafeUser();
-const savedToken = localStorage.getItem('token');
+const getSafeToken = () => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token || token === "undefined") return null;
+    return token;
+  } catch {
+    return null;
+  }
+};
 
 const initialState = {
-  currentUser: savedUser,
-  token: savedToken,
-  isLoggedIn: !!savedToken
+  currentUser: getSafeUser(),
+  token: getSafeToken(),
+  isLoggedIn: !!getSafeToken()
 };
 
 const userSlice = createSlice({
@@ -24,16 +31,16 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action) => {
-      const user = action.payload.user || action.payload.User;
-      const token = action.payload.token || action.payload.Token;
+  const user = action.payload.user || action.payload.User;
+  const token = action.payload.token || action.payload.Token;
 
-      state.currentUser = user;
-      state.token = token;
+  state.currentUser = user ?? null;
+  state.token = token ?? null;
+  state.isLoggedIn = !!token && !!user;
 
-      state.isLoggedIn = !!token && !!user;
-      if (token) localStorage.setItem('token', token);
-      if (user) localStorage.setItem('user', JSON.stringify(user));
-    },
+  if (token) localStorage.setItem('token', token);
+  if (user) localStorage.setItem('user', JSON.stringify(user));
+},
 
     updateCurrentUser: (state, action) => {
       state.currentUser = { ...state.currentUser, ...action.payload };
@@ -47,6 +54,8 @@ const userSlice = createSlice({
       localStorage.removeItem('token');
       localStorage.removeItem('user');
     },
+
+    
   },
 });
 

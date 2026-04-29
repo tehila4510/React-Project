@@ -7,20 +7,54 @@ export default function LoginTab({ onAuthSuccess, setAlert, setTab }) {
   const dispatch = useDispatch();
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
   const [loginUser, { isLoading }] = useLoginUserMutation();
+const getErrorMessage = (err) => {
+  // אם השרת החזיר ולידציה של שדות (למשל סיסמה קצרה מדי)
+  if (err?.data?.errors) {
+    return Object.values(err.data.errors).flat().join(", ");
+  }
+  // אם השרת החזיר הודעה פשוטה
+  if (err?.data?.message) {
+    return err.data.message;
+  }
+  // אם השרת נפל או אין אינטרנט
+  if (err?.status === 'FETCH_ERROR') {
+    return "לא ניתן ליצור קשר עם השרת. וודא שהוא מופעל.";
+  }
+  // ברירת מחדל לכל מקרה אחר
+  return "משהו השתבש, נסה שוב מאוחר יותר.";
+};
+const validateLogin = () => {
+  const e = {};
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setAlert(null);
-    try {
-      const result = await loginUser(loginForm).unwrap();
-      dispatch(setUser({ token: result.token, user: result.user }));
-      onAuthSuccess();
-      
-      console.log("הצליח")
-    } catch (err) {
-      setAlert({ type: 'error', msg: err?.data?.message || 'Invalid email or password.' });
-    }
-  };
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(loginForm.email.trim().toLowerCase())) {
+    e.email = "Invalid email";
+  }
+
+  if (!loginForm.password) {
+    e.password = "Password is required";
+  }
+
+  return e;
+};
+ const handleLogin = async (e) => {
+  e.preventDefault();
+  setAlert(null);
+
+  const errors = validateLogin();
+  if (Object.keys(errors).length > 0) {
+    setAlert({ type: "error", msg: Object.values(errors).join(", ") });
+    return;
+  }
+
+  try {
+    const result = await loginUser(loginForm).unwrap();
+    dispatch(setUser({ token: result.token, user: result.user }));
+    onAuthSuccess();
+  } catch (err) {
+    setAlert({ type: "error", msg: getErrorMessage(err) });
+  }
+};
 
   return (
     <form onSubmit={handleLogin}>
