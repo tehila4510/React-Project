@@ -1,12 +1,13 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../features/User/Redux/userSlice';
 import UserAvatar from '../features/User/Components/UserAvatar';
+import logo from "../../public/logo2.png"
 
 const NAV = [
   { id: 'home',     icon: '🏠', label: 'Home' },
   { id: 'progress', icon: '📊', label: 'My Progress' },
   { id: 'errors',   icon: '❌', label: 'My Mistakes', badge: true },
-    { id: 'chat',     icon: '🦉', label: 'English Teacher' },
+  { id: 'chat',     icon: '🦉', label: 'English Teacher' },
 
   { id: 'profile',  icon: '👤', label: 'Profile' },
   { id: 'settings', icon: '⚙️', label: 'Settings' },
@@ -29,7 +30,8 @@ export default function Sidebar({ view, setView, errorCount }) {
     <aside className="sidebar">
       {/* לוגו */}
       <div className="sidebar-logo" onClick={() => setView('home')}>
-        <UserAvatar size={32} />
+        <span > <img src={logo} alt="logo" width="30px" /></span>
+      
         <span className="logo-text">GLOTTIE</span>
       </div>
 
@@ -64,7 +66,9 @@ export default function Sidebar({ view, setView, errorCount }) {
         onClick={() => setView('profile')}
       >
         <div className="profile-mini">
-          <div className="avatar">🦉</div>
+          <div className="avatar">       
+                  <UserAvatar size={38} />
+          </div>
           <div>
             <div className="profile-name">
               {currentUser?.firstName} {currentUser?.lastName}

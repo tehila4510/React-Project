@@ -4,46 +4,45 @@ import {
   useRegisterUserMutation,
   useUpdateUserMutation,
 } from "../features/User/Redux/api";
-import { setUser, updateCurrentUser } from "../features/User/Redux/userSlice";
+import { setUser } from "../features/User/Redux/userSlice";
 import LoginTab from "./LoginForm";
 import RegisterTab from "./RegisterForm";
 import PlacementTest from "./PlacementTest";
 import LevelPicker from "./LevelPicker";
+import logo from "../../public/logo.png"
+
 import "./auth.css";
 
 export default function AuthPage({ onAuthSuccess }) {
   const dispatch = useDispatch();
 
-  // ניהול מצבי התצוגה
-  const [tab, setTab] = useState("login"); // 'login' או 'register'
-  const [step, setStep] = useState("form"); // 'form', 'level', או 'test'
-  const [alert, setAlert] = useState(null);
+  const [tab, setTab]                               = useState("login");
+  const [step, setStep]                             = useState("form");
+  const [alert, setAlert]                           = useState(null);
+  const [registrationResult, setRegistrationResult] = useState(null); // תוצאת רישום זמנית
 
-  // מוטציות מה-API
   const [registerUser, { isLoading: registering }] = useRegisterUserMutation();
-  const [updateUser] = useUpdateUserMutation();
+  const [updateUser]                               = useUpdateUserMutation();
 
+  // ── שלב 1: רישום — שולח נתונים לשרת אבל לא נכנס לאפליקציה עדיין ──
   const handleRegisterNext = async (formData) => {
     setAlert(null);
     try {
       const dataToSend = new FormData();
-
-      dataToSend.append("Name", formData.name);
-      dataToSend.append("Email", formData.email);
-      dataToSend.append("PasswordHash", formData.password);
+      dataToSend.append("Name",     formData.name);
+      dataToSend.append("Email",    formData.email);
+      dataToSend.append("Password", formData.password);
+      if (formData.file) {
+        dataToSend.append("file", formData.file);
+      }
 
       const result = await registerUser(dataToSend).unwrap();
 
-      dispatch(
-        setUser({
-          token: result.token || result.Token,
-          user: result.user || result.User,
-        }),
-      );
-
+      // ✅ שומר תוצאה אבל לא dispatch — כדי לא לקפוץ ל-GlottieApp לפני בחירת רמה
+      setRegistrationResult(result);
       setStep("level");
+
     } catch (err) {
-      console.error("Registration error:", err);
       setAlert({
         type: "error",
         msg: err?.data?.errors
@@ -53,24 +52,33 @@ export default function AuthPage({ onAuthSuccess }) {
     }
   };
 
-  const handleLevelFinalize = async (formData) => {
+  // ── שלב 2: בחירת רמה — עדכון ואז כניסה לאפליקציה ──
+  const handleLevelFinalize = async (levelId) => {
     setAlert(null);
     try {
-      const savedUser = JSON.parse(localStorage.getItem("user"));
-      const userId = savedUser?.id;
+      const user   = registrationResult?.user  || registrationResult?.User;
+      const token  = registrationResult?.token || registrationResult?.Token;
+      const userId = user?.userId || user?.id;
 
       if (!userId) throw new Error("User ID not found");
 
       const dataToSend = new FormData();
+      dataToSend.append("Name",         user?.name  || user?.Name);
+      dataToSend.append("Email",        user?.email || user?.Email);
+      dataToSend.append("CurrentLevel", levelId);
 
-      dataToSend.append("currentLevel", formData.levelId);
+      await updateUser({ id: userId, data: dataToSend }).unwrap();
 
-      const result= await updateUser(dataToSend).unwrap();
-      dispatch(updateCurrentUser({ currentLevel: result.CurrentLevel }));
-
+      // ✅ רק עכשיו — אחרי בחירת רמה — נכנסים לאפליקציה
+      dispatch(setUser({ token, user: { ...user, CurrentLevel: levelId } }));
       onAuthSuccess();
+
     } catch (err) {
       console.error("Update level error:", err);
+      // גם אם העדכון נכשל — נכנסים עם הרמה שנבחרה
+      const user  = registrationResult?.user  || registrationResult?.User;
+      const token = registrationResult?.token || registrationResult?.Token;
+      dispatch(setUser({ token, user: { ...user, CurrentLevel: levelId } }));
       onAuthSuccess();
     }
   };
@@ -79,28 +87,32 @@ export default function AuthPage({ onAuthSuccess }) {
     <div className="auth-bg">
       <div className="auth-card">
         <div className="auth-logo">
-          <span className="auth-owl">🦉</span>
-          <div className="auth-brand">GLOTTIE</div>
+            <span className="auth-owl"> <img src={logo} alt="logo" width="150px" /></span>
         </div>
 
+        {/* ─── Step: FORM ─── */}
         {step === "form" && (
           <>
             <div className="auth-tabs">
               <button
                 className={`auth-tab ${tab === "login" ? "active" : ""}`}
-                onClick={() => setTab("login")}
+                onClick={() => { setTab("login"); setAlert(null); }}
               >
                 🔐 Login
               </button>
               <button
                 className={`auth-tab ${tab === "register" ? "active" : ""}`}
-                onClick={() => setTab("register")}
+                onClick={() => { setTab("register"); setAlert(null); }}
               >
                 ✨ Sign Up
               </button>
             </div>
 
-            {alert && <div className={`alert ${alert.type}`}>{alert.msg}</div>}
+            {alert && (
+              <div className={`alert ${alert.type}`}>
+                {alert.type === "error" ? "⚠️" : "✅"} {alert.msg}
+              </div>
+            )}
 
             {tab === "login" ? (
               <LoginTab
@@ -109,18 +121,29 @@ export default function AuthPage({ onAuthSuccess }) {
                 setTab={setTab}
               />
             ) : (
-              <RegisterTab onNextStep={handleRegisterNext} setTab={setTab} />
+              <RegisterTab
+                onNextStep={handleRegisterNext}
+                setTab={setTab}
+                isLoading={registering}
+              />
             )}
           </>
         )}
 
+        {/* ─── Step: LEVEL PICKER ─── */}
         {step === "level" && (
-          <LevelPicker
-            onSelectLevel={handleLevelFinalize}
-            onStartTest={() => setStep("test")}
-          />
+          <>
+            {alert && (
+              <div className={`alert ${alert.type}`}>⚠️ {alert.msg}</div>
+            )}
+            <LevelPicker
+              onSelectLevel={handleLevelFinalize}
+              onStartTest={() => setStep("test")}
+            />
+          </>
         )}
 
+        {/* ─── Step: PLACEMENT TEST ─── */}
         {step === "test" && (
           <PlacementTest
             onComplete={handleLevelFinalize}

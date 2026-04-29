@@ -8,17 +8,14 @@ import ReactDOM from 'react-dom/client';
 import { useSelector } from 'react-redux';
 import AuthPage   from './auth/AuthPage.jsx';
 
+
 export function Root() {
-  const { isLoggedIn, currentUser } = useSelector((state) => state.user);
+  
+  const { isLoggedIn } = useSelector((state) => state.user);
 
   if (!isLoggedIn) {
-    return <AuthPage />;
+    return <AuthPage onAuthSuccess={() => {}} />;
   }
-
-  if (!currentUser?.currentLevel) {
-    return <AuthPage />;
-  }
-
   return <GlottieApp />;
 }
 
