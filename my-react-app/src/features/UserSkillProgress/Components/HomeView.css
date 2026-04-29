@@ -1,0 +1,368 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap');
+
+/* ══════════════════════════════════════════
+   GLOTTIE – HomeView styles
+   palette: purple / blue / yellow / orange
+   ══════════════════════════════════════════ */
+
+:root {
+  --g-purple:        #7B5EFF;
+  --g-purple-dark:   #5B3FD9;
+  --g-purple-light:  #EDE9FF;
+  --g-purple-mid:    #C4B5FD;
+  --g-blue:          #3B8FFF;
+  --g-blue-light:    #DBEAFE;
+  --g-yellow:        #FFB800;
+  --g-yellow-light:  #FFF8E1;
+  --g-orange:        #FF8C42;
+  --g-orange-light:  #FFF0E6;
+  --g-green:         #22C67A;
+  --g-green-light:   #E3FDF0;
+  --g-red:           #FF5C7A;
+  --g-red-light:     #FFEEF2;
+  --g-bg:            #F8F6FF;
+  --g-white:         #FFFFFF;
+  --g-text:          #1E1060;
+  --g-text-muted:    #7B72A0;
+  --g-border:        rgba(123, 94, 255, 0.12);
+  --g-shadow:        0 4px 24px rgba(123, 94, 255, 0.10);
+  --g-shadow-lg:     0 8px 40px rgba(123, 94, 255, 0.18);
+}
+
+/* ── PAGE ───────────────────────────────── */
+.page {
+  padding: 28px 32px;
+  min-height: 100vh;
+  background: var(--g-bg);
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(123, 94, 255, 0.07) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(59, 143, 255, 0.07) 0%, transparent 50%);
+  font-family: 'Nunito', sans-serif;
+  color: var(--g-text);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ── DECORATIVE BLOBS ───────────────────── */
+.g-blob {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(70px);
+  opacity: 0.20;
+}
+.g-blob-1 {
+  width: 380px; height: 380px;
+  background: var(--g-purple);
+  top: -100px; right: -80px;
+  animation: gFloat 8s ease-in-out infinite;
+}
+.g-blob-2 {
+  width: 260px; height: 260px;
+  background: var(--g-blue);
+  bottom: 60px; left: -60px;
+  animation: gFloat 10s ease-in-out infinite reverse;
+}
+.g-blob-3 {
+  width: 180px; height: 180px;
+  background: var(--g-yellow);
+  top: 45%; right: 5%;
+  animation: gFloat 7s ease-in-out infinite 2s;
+}
+@keyframes gFloat {
+  0%, 100% { transform: translateY(0)     scale(1);    }
+  50%       { transform: translateY(-24px) scale(1.05); }
+}
+
+/* ── FLOATING STARS ─────────────────────── */
+.g-stars {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.g-star {
+  position: absolute;
+  opacity: 0;
+  animation: starFloat linear infinite;
+}
+@keyframes starFloat {
+  0%   { opacity: 0;   transform: translateY(100vh)  rotate(0deg);   }
+  10%  { opacity: 0.7; }
+  90%  { opacity: 0.4; }
+  100% { opacity: 0;   transform: translateY(-80px)  rotate(720deg); }
+}
+
+/* ── HERO ───────────────────────────────── */
+.home-hero {
+  position: relative;
+  background: linear-gradient(135deg, #7B5EFF 0%, #3B8FFF 60%, #22C67A 100%);
+  border-radius: 28px;
+  padding: 36px 40px;
+  margin-bottom: 36px;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(123, 94, 255, 0.30);
+  z-index: 1;
+}
+/* subtle dot-grid overlay */
+.home-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='30' height='30' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='15' cy='15' r='1' fill='rgba(255,255,255,0.14)'/%3E%3C/svg%3E");
+  background-size: 30px 30px;
+  pointer-events: none;
+}
+
+/* owl mascot */
+.hero-owl {
+  position: absolute;
+  right: 28px;
+  bottom: -6px;
+  font-size: 100px;
+  line-height: 1;
+  animation: owlBob 3s ease-in-out infinite;
+  filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.15));
+  user-select: none;
+}
+@keyframes owlBob {
+  0%, 100% { transform: translateY(0)     rotate(-3deg); }
+  50%       { transform: translateY(-10px) rotate(3deg);  }
+}
+
+.hero-content  { position: relative; }
+
+.hero-greeting {
+  font-size: 14px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 0.4px;
+  margin-bottom: 6px;
+}
+.hero-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 36px;
+  color: #fff;
+  line-height: 1.15;
+  margin-bottom: 8px;
+}
+.hero-title span {
+  color: var(--g-yellow);
+  text-shadow: 0 0 22px rgba(255, 184, 0, 0.55);
+}
+.hero-sub {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.80);
+  font-weight: 600;
+  max-width: 360px;
+  margin-bottom: 22px;
+}
+
+/* stats chips */
+.stats-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.stat-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.20);
+  backdrop-filter: blur(10px);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  padding: 7px 14px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #fff;
+  transition: transform 0.18s, background 0.18s;
+}
+.stat-chip:hover {
+  background: rgba(255, 255, 255, 0.32);
+  transform: translateY(-2px);
+}
+
+/* ── SECTION HEADER ─────────────────────── */
+.section-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 22px;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--g-text);
+  position: relative;
+  z-index: 1;
+}
+.section-badge {
+  background: linear-gradient(135deg, var(--g-purple), var(--g-blue));
+  color: #fff;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 3px 11px;
+  border-radius: 20px;
+  letter-spacing: 1px;
+  font-family: 'Nunito', sans-serif;
+}
+
+/* ── SKILLS GRID ────────────────────────── */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── SKILL CARD ─────────────────────────── */
+.skill-card {
+  background: var(--g-white);
+  border-radius: 22px;
+  padding: 22px 18px 18px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(123, 94, 255, 0.08);
+}
+/* colored top bar */
+.skill-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  border-radius: 22px 22px 0 0;
+  background: var(--card-color, var(--g-purple));
+}
+
+.skill-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(123, 94, 255, 0.18);
+  border-color: var(--card-color, var(--g-purple));
+}
+.skill-card.selected {
+  border-color: var(--card-color, var(--g-purple));
+  background: linear-gradient(160deg, var(--g-purple-light), #fff);
+  box-shadow: 0 12px 36px rgba(123, 94, 255, 0.22);
+  transform: translateY(-6px) scale(1.03);
+}
+.skill-card.locked {
+  opacity: 0.55;
+  cursor: not-allowed;
+  filter: grayscale(0.3);
+}
+.skill-card.locked:hover {
+  transform: none;
+  box-shadow: 0 4px 16px rgba(123, 94, 255, 0.08);
+}
+
+.skill-lock-icon {
+  position: absolute;
+  top: 10px; right: 12px;
+  font-size: 16px;
+}
+.skill-icon {
+  font-size: 42px;
+  display: block;
+  margin-bottom: 10px;
+  transition: transform 0.3s;
+}
+.skill-card:not(.locked):hover .skill-icon {
+  transform: scale(1.2) rotate(-5deg);
+}
+.skill-name {
+  font-family: 'Fredoka One', cursive;
+  font-size: 16px;
+  color: var(--g-text);
+  margin-bottom: 4px;
+}
+.skill-progress-text {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--g-text-muted);
+  margin-bottom: 8px;
+}
+.skill-bar {
+  height: 6px;
+  background: rgba(123, 94, 255, 0.10);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.skill-bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ── START BUTTON ───────────────────────── */
+.btn-primary {
+  background: linear-gradient(135deg, var(--g-purple-dark), var(--g-blue));
+  color: #fff;
+  border: none;
+  padding: 15px 48px;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 900;
+  font-family: 'Fredoka One', cursive;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  box-shadow: 0 8px 28px rgba(91, 63, 217, 0.38);
+  transition: all 0.22s;
+  animation: btnPulse 2.2s ease-in-out infinite;
+}
+.btn-primary:hover {
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 14px 36px rgba(91, 63, 217, 0.48);
+}
+@keyframes btnPulse {
+  0%, 100% { box-shadow: 0 8px 28px rgba(91, 63, 217, 0.38); }
+  50%       { box-shadow: 0 8px 40px rgba(91, 63, 217, 0.58); }
+}
+
+/* cta wrapper fade-up */
+.cta-wrapper {
+  text-align: center;
+  margin-top: 8px;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+  animation: fadeUp 0.35s ease both;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* ── LOADING & ERROR ────────────────────── */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: 16px;
+  color: var(--g-text-muted);
+  font-weight: 800;
+  font-size: 15px;
+}
+.loading-spinner {
+  width: 48px; height: 48px;
+  border: 4px solid var(--g-purple-light);
+  border-top-color: var(--g-purple);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: 10px;
+  color: var(--g-red);
+  font-weight: 800;
+  font-size: 15px;
+}

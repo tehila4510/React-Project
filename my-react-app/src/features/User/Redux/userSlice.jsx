@@ -16,7 +16,7 @@ const savedToken = localStorage.getItem('token');
 const initialState = {
   currentUser: savedUser,
   token: savedToken,
-  isLoggedIn: !!savedToken && !!savedUser?.currentLevel && savedUser.currentLevel > -1,
+  isLoggedIn: !!savedToken
 };
 
 const userSlice = createSlice({
@@ -37,11 +37,6 @@ const userSlice = createSlice({
 
     updateCurrentUser: (state, action) => {
       state.currentUser = { ...state.currentUser, ...action.payload };
-      
-      if (state.currentUser?.currentLevel > 0) {
-        state.isLoggedIn = true;
-      }
-      
       localStorage.setItem('user', JSON.stringify(state.currentUser));
     },
 
