@@ -14,10 +14,10 @@ export const quizApi = createApi({
 
   endpoints: (builder) => ({
 
-    // POST /api/Quiz/start-session/{userId}
+    // POST /api/Quiz/start-session
     startSession: builder.mutation({
-      query: (userId) => ({
-        url: `/Quiz/start-session/${userId}`,
+      query: () => ({
+        url: `/Quiz/start-session`,
         method: 'POST',
       }),
     }),
@@ -30,19 +30,19 @@ export const quizApi = createApi({
       }),
     }),
 
-    // GET /api/Quiz/next-question/{userId}/{sessionId}/{skillId?}
+    // GET /api/Quiz/next-question/{sessionId}/{skillId?}
     getNextQuestion: builder.query({
-      query: ({ userId, sessionId, skillId }) =>
-        skillId
-          ? `/Quiz/next-question/${userId}/${sessionId}/${skillId}`
-          : `/Quiz/next-question/${userId}/${sessionId}`,
+     query: ({ sessionId, skillId }) =>
+  skillId
+    ? `/Quiz/next-question/${sessionId}/${skillId}`
+    : `/Quiz/next-question/${sessionId}`,
     }),
 
-    // POST /api/Quiz/submit-answer?userId={userId}
+    // POST /api/Quiz/submit-answer
     
     submitAnswer: builder.mutation({
-      query: ({ userId, answerDto }) => ({
-        url: `/Quiz/submit-answer?userId=${userId}`,
+      query: ({ answerDto }) => ({
+        url: `/Quiz/submit-answer`,
         method: 'POST',
         body: answerDto,
       }),

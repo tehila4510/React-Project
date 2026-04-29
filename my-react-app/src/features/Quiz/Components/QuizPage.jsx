@@ -45,10 +45,8 @@ export default function QuizPage({ skill, onClose }) {
   const initSession = async () => {
     try {
       setPhase('loading');
-      // 1. פתח סשן
-      const sid = await startSession(userId).unwrap();
+      const sid = await startSession().unwrap();
       setSessionId(sid);
-      // 2. שלוף שאלה ראשונה
       await loadNextQuestion(sid, 0);
     } catch (err) {
       console.error('Failed to start session', err);
@@ -65,7 +63,7 @@ export default function QuizPage({ skill, onClose }) {
 
     try {
       const q = await fetchNextQuestion({
-        userId,
+        
         sessionId: sid || sessionId,
         skillId: skill?.skillId || null,
       }).unwrap();
@@ -100,7 +98,7 @@ export default function QuizPage({ skill, onClose }) {
         selectedOptionId: selectedOption.optionId,
       };
 
-      const review = await submitAnswer({ userId, answerDto: dto }).unwrap();
+      const review = await submitAnswer({answerDto: dto }).unwrap();
 
       setFeedback(review);
       if (review.isCorrect) setCorrectCount((c) => c + 1);
