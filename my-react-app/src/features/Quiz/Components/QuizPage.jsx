@@ -6,7 +6,7 @@ import {
   useEndSessionMutation,
   useLazyGetNextQuestionQuery,
   useSubmitAnswerMutation,
-} from '../api';
+} from '../Redux/api';
 
 import QuizProgress   from './QuizProgress';
 import QuestionCard   from './QuestionCard';
@@ -40,7 +40,7 @@ export default function QuizPage({ skill, onClose }) {
   useEffect(() => {
     initSession();
     // eslint-disable-next-line
-  }, []);
+  }, []); 
 
   const initSession = async () => {
     try {

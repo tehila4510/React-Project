@@ -2,39 +2,30 @@ import './LessonPath.css';
 
 const OFFSETS = ['', 'step-offset-left', '', 'step-offset-right', ''];
 
-// TODO: להחליף בקריאת API של Sessions לפי skillId
 const MOCK_UNITS = [
   {
     id: 1, title: 'Unit 1 – Foundations',
     steps: [
-      { id: 1,  icon: '⭐', label: 'Intro',     state: 'completed' },
-      { id: 2,  icon: '🔤', label: 'Basics',    state: 'completed' },
-      { id: 3,  icon: '👋', label: 'Greetings', state: 'completed' },
-      { id: 4,  icon: '🔢', label: 'Practice',  state: 'current'   },
-      { id: 5,  icon: '🏅', label: 'Quiz',      state: 'locked'    },
-    ],
-  },
-  {
-    id: 2, title: 'Unit 2 – Intermediate',
-    steps: [
-      { id: 6,  icon: '📖', label: 'Reading',   state: 'locked' },
-      { id: 7,  icon: '✍️',  label: 'Writing',   state: 'locked' },
-      { id: 8,  icon: '🎧', label: 'Listening', state: 'locked' },
-      { id: 9,  icon: '💬', label: 'Speaking',  state: 'locked' },
-      { id: 10, icon: '🏅', label: 'Quiz',      state: 'locked' },
-    ],
-  },
-  {
-    id: 3, title: 'Unit 3 – Advanced',
-    steps: [
-      { id: 11, icon: '🚀', label: 'Challenge', state: 'locked' },
-      { id: 12, icon: '🌟', label: 'Mastery',   state: 'locked' },
-      { id: 13, icon: '🏆', label: 'Final',      state: 'locked' },
+      { id: 1, icon: '⭐', label: 'Intro', state: 'completed' },
+      { id: 2, icon: '🔤', label: 'Basics', state: 'completed' },
+      { id: 3, icon: '👋', label: 'Greetings', state: 'completed' },
+      { id: 4, icon: '🔢', label: 'Practice', state: 'current' },
+      { id: 5, icon: '🏅', label: 'Quiz', state: 'locked' },
     ],
   },
 ];
 
-export default function LessonPath({ skill, onBack }) {
+export default function LessonPath({ skill, onBack, onStartQuiz }) {
+const handleStepClick = (step) => {
+  if (step.state === 'locked') return;
+
+  if (typeof onStartQuiz !== 'function') {
+    console.error('onStartQuiz is missing!');
+    return;
+  }
+
+  onStartQuiz(skill, step);
+};
   return (
     <div>
 
@@ -51,7 +42,7 @@ export default function LessonPath({ skill, onBack }) {
         </div>
       </div>
 
-      {/* מסלול */}
+      {/* Path */}
       <div className="path-container">
         {MOCK_UNITS.map((unit, ui) => (
           <div key={unit.id} className="path-unit">
@@ -64,36 +55,37 @@ export default function LessonPath({ skill, onBack }) {
                 const isCurr = step.state === 'current';
 
                 return (
-                  <div
-                    key={step.id}
-                    style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}
-                  >
+                  <div key={step.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+
                     {si > 0 && (
                       <div
                         className={`path-connector ${isComp || isCurr ? 'completed' : ''}`}
                         style={{ height: 32 }}
                       />
                     )}
+
                     <div className={`step-wrap ${offset}`}>
                       <div
                         className={`step-node ${step.state}`}
-                        title={step.state === 'locked' ? 'Not unlocked yet' : `Lesson: ${step.label}`}
+                        onClick={() => handleStepClick(step)}
+                        style={{
+                          cursor: step.state === 'locked' ? 'not-allowed' : 'pointer'
+                        }}
                       >
                         {step.state === 'locked' ? '🔒' : step.icon}
                         {isComp && <span className="star-badge">⭐</span>}
                       </div>
+
                       <div className={`step-label ${isCurr ? 'active' : ''}`}>
                         {isCurr ? '▶ ' : ''}{step.label}
                       </div>
                     </div>
+
                   </div>
                 );
               })}
             </div>
 
-            {ui < MOCK_UNITS.length - 1 && (
-              <div className="path-connector" style={{ height: 42, marginTop: 8, marginBottom: 8 }} />
-            )}
           </div>
         ))}
       </div>

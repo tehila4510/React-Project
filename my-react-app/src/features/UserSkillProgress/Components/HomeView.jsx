@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useGetAllSkillsQuery } from '../../Skill/Redux/api';
 import { useGetAllUserSkillProgressQuery } from '../Redux/api';
-import LessonPath from './LessonPath';
+import LessonPath from '../../Lesson/LessonPath';
+import QuizPage from '../../Quiz/Components/QuizPage';
+import logo from "../../../../public/logo3.png";
 import './HomeView.css';
 
 const SKILL_ICONS = {
@@ -24,7 +26,7 @@ export default function HomeView() {
   const [showPath, setShowPath]           = useState(false);
 
   const { currentUser } = useSelector((state) => state.user);
-
+const [showQuiz, setShowQuiz] = useState(false);
   const {
     data: skills,
     isLoading: loadingSkills,
@@ -53,7 +55,7 @@ export default function HomeView() {
       <div className="page">
         <div className="loading-state">
           <div className="loading-spinner" />
-          Loading your skills… 🦉
+          Loading your skills… 
         </div>
       </div>
     );
@@ -68,15 +70,36 @@ export default function HomeView() {
       </div>
     );
   }
+if (showPath && selectedSkill) {
+  return (
+    <div className="page">
+      <LessonPath
+        skill={selectedSkill}
+        onBack={() => setShowPath(false)}
+        onStartQuiz={(skill, step) => {
+          console.log('start quiz', skill, step);
 
-  if (showPath && selectedSkill) {
-    return (
-      <div className="page">
-        <LessonPath skill={selectedSkill} onBack={() => setShowPath(false)} />
-      </div>
-    );
-  }
+          // מעבר לבוחן
+          setShowPath(false);
 
+          // כאן תצטרכי state לבוחן:
+          setShowQuiz(true); // אם יש לך
+        }}
+      />
+    </div>
+  );
+}
+if (showQuiz && selectedSkill) {
+  return (
+    <QuizPage
+      skill={selectedSkill}
+      onClose={() => {
+        setShowQuiz(false);
+        setShowPath(true);
+      }}
+    />
+  );
+}
   return (
     <div className="page">
 
@@ -106,7 +129,7 @@ export default function HomeView() {
       {/* Hero */}
       <div className="home-hero">
         <div className="hero-content">
-          <div className="hero-greeting">🦉 Welcome back, {currentUser?.name}!</div>
+          <div className="hero-greeting"> Welcome back, {currentUser?.name}!</div>
           <div className="hero-title">
             Ready to conquer <span>Glottie</span>?
           </div>
@@ -120,7 +143,8 @@ export default function HomeView() {
             <div className="stat-chip">✅ <span>{progressList?.length || 0} skills started</span></div>
           </div>
         </div>
-        <div className="hero-owl">🦉</div>
+        <div className="hero-owl"> <span > <img src={logo} alt="logo" width="130px" /></span>
+</div>
       </div>
 
       {/* Skills */}
