@@ -1,3 +1,4 @@
+import './LessonPath.css';
 
 const OFFSETS = ['', 'step-offset-left', '', 'step-offset-right', ''];
 
@@ -6,21 +7,21 @@ const MOCK_UNITS = [
   {
     id: 1, title: 'Unit 1 – Foundations',
     steps: [
-      { id: 1, icon: '⭐', label: 'Intro',     state: 'completed' },
-      { id: 2, icon: '🔤', label: 'Basics',    state: 'completed' },
-      { id: 3, icon: '👋', label: 'Greetings', state: 'completed' },
-      { id: 4, icon: '🔢', label: 'Practice',  state: 'current'   },
-      { id: 5, icon: '🏅', label: 'Quiz',      state: 'locked'    },
+      { id: 1,  icon: '⭐', label: 'Intro',     state: 'completed' },
+      { id: 2,  icon: '🔤', label: 'Basics',    state: 'completed' },
+      { id: 3,  icon: '👋', label: 'Greetings', state: 'completed' },
+      { id: 4,  icon: '🔢', label: 'Practice',  state: 'current'   },
+      { id: 5,  icon: '🏅', label: 'Quiz',      state: 'locked'    },
     ],
   },
   {
     id: 2, title: 'Unit 2 – Intermediate',
     steps: [
-      { id: 6,  icon: '📖', label: 'Reading',  state: 'locked' },
-      { id: 7,  icon: '✍️',  label: 'Writing',  state: 'locked' },
-      { id: 8,  icon: '🎧', label: 'Listening',state: 'locked' },
-      { id: 9,  icon: '💬', label: 'Speaking', state: 'locked' },
-      { id: 10, icon: '🏅', label: 'Quiz',     state: 'locked' },
+      { id: 6,  icon: '📖', label: 'Reading',   state: 'locked' },
+      { id: 7,  icon: '✍️',  label: 'Writing',   state: 'locked' },
+      { id: 8,  icon: '🎧', label: 'Listening', state: 'locked' },
+      { id: 9,  icon: '💬', label: 'Speaking',  state: 'locked' },
+      { id: 10, icon: '🏅', label: 'Quiz',      state: 'locked' },
     ],
   },
   {
@@ -28,7 +29,7 @@ const MOCK_UNITS = [
     steps: [
       { id: 11, icon: '🚀', label: 'Challenge', state: 'locked' },
       { id: 12, icon: '🌟', label: 'Mastery',   state: 'locked' },
-      { id: 13, icon: '🏆', label: 'Final',     state: 'locked' },
+      { id: 13, icon: '🏆', label: 'Final',      state: 'locked' },
     ],
   },
 ];
@@ -36,14 +37,15 @@ const MOCK_UNITS = [
 export default function LessonPath({ skill, onBack }) {
   return (
     <div>
+
       {/* Header */}
       <div className="lesson-path-header">
         <button className="back-btn" onClick={onBack}>← Back</button>
         <div>
-          <div style={{ fontFamily: "'Fredoka One', cursive", fontSize: 20, color: 'var(--text)' }}>
+          <div className="header-skill-icon">
             {skill.icon} {skill.name}
           </div>
-          <div style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 700 }}>
+          <div className="header-skill-sub">
             Lesson Path – conquer every level!
           </div>
         </div>
@@ -57,9 +59,9 @@ export default function LessonPath({ skill, onBack }) {
 
             <div className="path-steps">
               {unit.steps.map((step, si) => {
-                const offset  = OFFSETS[si % OFFSETS.length];
-                const isComp  = step.state === 'completed';
-                const isCurr  = step.state === 'current';
+                const offset = OFFSETS[si % OFFSETS.length];
+                const isComp = step.state === 'completed';
+                const isCurr = step.state === 'current';
 
                 return (
                   <div
@@ -95,6 +97,7 @@ export default function LessonPath({ skill, onBack }) {
           </div>
         ))}
       </div>
+
     </div>
   );
 }
