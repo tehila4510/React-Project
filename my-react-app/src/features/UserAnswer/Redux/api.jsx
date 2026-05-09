@@ -2,10 +2,17 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const userAnswerApi = createApi({
   reducerPath: 'userAnswerApi',
-
-  baseQuery: fetchBaseQuery({
-    baseUrl: 'https://localhost:7185/api'
-  }),
+baseQuery: fetchBaseQuery({
+  baseUrl: 'https://localhost:7185/api',
+  prepareHeaders: (headers, { getState }) => {
+    // נניח שהטוקן שמור אצלך ב-state תחת user
+    const token = getState().user.token; 
+    if (token) {
+      headers.set('authorization', `Bearer ${token}`);
+    }
+    return headers;
+  },
+}),
 
   tagTypes: ['UserAnswer'],
 
@@ -13,8 +20,8 @@ export const userAnswerApi = createApi({
 
     // GET /api/UserAnswer
     getAllUserAnswers: builder.query({
-      query: () => '/UserAnswer',
-      providesTags: ['UserAnswer'],
+  query: () => '/UserAnswer/my-answers', // הוספת הנתיב הספציפי למשתמש
+  providesTags: ['UserAnswer'],
 
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
@@ -24,6 +31,8 @@ export const userAnswerApi = createApi({
         }
       }
     }),
+
+    
 
     // GET /api/UserAnswer/{id}
     getUserAnswerById: builder.query({

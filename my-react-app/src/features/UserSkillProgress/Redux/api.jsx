@@ -1,19 +1,27 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const userSkillProgressApi = createApi({
-  reducerPath: 'userSkillProgressApi',
-
+ reducerPath: 'userSkillProgressApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://localhost:7185/api'
+    baseUrl: 'https://localhost:7185/api',
+    // כאן אנחנו מוסיפים את ה-Token באופן אוטומטי לכל הבקשות
+    prepareHeaders: (headers, { getState }) => {
+      // שליפת ה-token מה-state (שנה את הנתיב בהתאם למבנה ה-Store שלך)
+      const token = getState().user.token || localStorage.getItem('token');
+      
+      if (token) {
+        headers.set('authorization', `Bearer ${token}`);
+      }
+      return headers;
+    },
   }),
-
   tagTypes: ['UserSkillProgress'],
 
   endpoints: (builder) => ({
 
     // GET /api/UserSkillProgress 
     getAllUserSkillProgress: builder.query({
-      query: () => '/UserSkillProgress',
+      query: () => '/UserSkillProgress/my-skill-progress', // הוספת הנתיב הספציפי למשתמש
       providesTags: ['UserSkillProgress'],
 
       async onQueryStarted(arg, { queryFulfilled }) {

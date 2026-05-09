@@ -1,0 +1,85 @@
+.bento-dashboard { padding: 40px; background: #f8fafc; min-height: 100vh; font-family: sans-serif; }
+.dash-header { margin-bottom: 30px; }
+
+.bento-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.card { background: white; padding: 24px; border-radius: 20px; border: 1px solid #e2e8f0; }
+.span-2 { grid-column: span 2; }
+.span-4 { grid-column: span 4; }
+
+h3 { margin: 0 0 20px 0; font-size: 14px; color: #64748b; text-transform: uppercase; }
+
+/* Weekly XP */
+.bar-chart { display: flex; align-items: flex-end; gap: 10px; height: 100px; }
+.bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.bar { width: 100%; background: #7B5EFF; border-radius: 4px; }
+
+/* Rings */
+.rings-container { display: flex; justify-content: space-around; }
+.ring-chart { display: flex; flex-direction: column; align-items: center; }
+.ring-pct { font-weight: bold; margin-top: 5px; }
+
+/* Heatmap */
+.heatmap { display: grid; grid-template-columns: repeat(35, 1fr); gap: 4px; }
+.heat-cell { aspect-ratio: 1; border-radius: 3px; background: #f1f5f9; }
+.heat-cell.l1 { background: #7B5EFF; }
+
+
+/* Skills List */
+.skills-grid-list { 
+  display: grid; 
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+  gap: 24px; 
+}
+
+.skill-row { 
+  display: flex; 
+  align-items: center; 
+  gap: 20px; 
+  padding: 20px; /* יותר מרווח */
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+}
+
+.skill-icon { 
+  width: 60px; /* אייקונים גדולים וברורים */
+  height: 60px; 
+  border-radius: 16px; 
+  display: flex; align-items: center; justify-content: center; 
+  font-size: 28px; /* אייקון מוגדל */
+}
+
+.skill-header { 
+  display: flex; 
+  justify-content: space-between; 
+  font-size: 16px; /* טקסט קריא יותר */
+  font-weight: 700; 
+  margin-bottom: 10px; 
+  color: #1e293b;
+}
+
+.bar-bg { 
+  height: 10px; /* פס התקדמות עבה יותר */
+  background: #f1f5f9; 
+  border-radius: 5px; 
+  overflow: hidden; 
+}
+
+.bar-fill { 
+  height: 100%; 
+  border-radius: 5px; 
+  transition: width 0.5s ease; 
+}
+
+.card {
+  background: white;
+  padding: 24px;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+}
