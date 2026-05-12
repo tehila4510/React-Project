@@ -7,7 +7,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { useSelector } from 'react-redux';
 import AuthPage   from './auth/AuthPage.jsx';
-
+import { BrowserRouter } from 'react-router-dom';
 
 export function Root() {
   
@@ -22,7 +22,9 @@ export function Root() {
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Provider store={store}>
+    <BrowserRouter>
       <Root />
+      </BrowserRouter>
     </Provider>
   </React.StrictMode>
 );

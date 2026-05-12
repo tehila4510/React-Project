@@ -1,17 +1,18 @@
-import { useState } from 'react';
 import { useSelector } from 'react-redux';
-
+import { useLocation } from 'react-router-dom';
 // קומפוננטות
 import Sidebar       from './Sidebar';
-import HomeView      from '../features/UserSkillProgress/Components/HomeView';
-import ProgressView  from '../features/UserSkillProgress/Components/ProgressView';
-import ErrorsView    from '../features/UserAnswer/Components/ErrorsView';
-import ProfileView   from '../features/User/Components/ProfileView';
-import ChatView      from '../features/Chat/Components/ChatView';
+
+// import HomeView      from '../features/UserSkillProgress/Components/HomeView';
+// import ProgressView  from '../features/UserSkillProgress/Components/ProgressView';
+// import ErrorsView    from '../features/UserAnswer/Components/ErrorsView';
+// import ProfileView   from '../features/User/Components/ProfileView';
+// import ChatView      from '../features/Chat/Components/ChatView';
 
 import UserAvatar from '../features/User/Components/UserAvatar';
 // סגנונות
 import '../styles/variables.css';
+import AppRouter from './router';
 
 // פרטיקלים
 function Particles() {
@@ -35,67 +36,39 @@ function Particles() {
     </div>
   );
 }
-
 const TITLES = {
-  home:     '🏠 Home',
-  progress: '📊 Progress',
-  errors:   '❌ My Mistakes',
-  profile:  '👤 Profile',
-  settings: '⚙️ Settings',
-  help:     '❓ Help',
+  '/': '🏠 Home',
+  '/progress': '📊 Progress',
+  '/errors': '❌ My Mistakes',
+  '/profile': '👤 Profile',
+  '/chat': '🦉 Glottie Teacher',
+  '/settings': '⚙️ Settings',
+  '/help': '❓ Help',
 };
 
 export default function GlottieApp() {
-  const [view, setView]           = useState('home');
   const { currentUser }           = useSelector((state) => state.user);
-
-  const xp      = currentUser?.xp       || 0;
-  const streak  = currentUser?.streak || 0;
+  const location = useLocation(); // מקבל את הנתיב הנוכחי
 
   return (
     <>
       <Particles />
       <div className="app">
-
-        {/* Sidebar */}
-        <Sidebar view={view} setView={setView} />
-
-        {/* תוכן ראשי */}
-        <main className="main">
-
-          {/* Topbar */}
-          <div className="topbar">
-            <div className="topbar-title">{TITLES[view] || '🏠 Home'}</div>
-            <div className="topbar-stats">
-              <div className="topbar-streak">🔥 {streak}</div>
-              <div className="topbar-xp">⚡ {xp} XP</div>
+        <Sidebar /> {/* הורדנו את ה-Props של ה-view */}
+      <main className="main">
+        <div className="topbar">
+          <div className="topbar-title">{TITLES[location.pathname] || '🏠 Home'}</div>
+          <div className="topbar-stats">
+             <div className="topbar-streak">🔥 {currentUser?.streak || 0}</div>
+             <div className="topbar-xp">⚡ {currentUser?.xp || 0} XP</div>
              <UserAvatar size={38} />
-            </div>
           </div>
+        </div>
 
-          {/* דפים */}
-          <div className="scroll-area" style={{ height: 'calc(100vh - 65px)', overflowY: 'auto' }}>
-            {view === 'home'     && <HomeView />}
-            {view === 'progress' && <ProgressView />}
-            {view === 'errors'   && <ErrorsView />}
-            {view === 'profile'  && <ProfileView />}
-            {view === 'chat'     && <ChatView />}
-            
-
-            {(view === 'settings' || view === 'help') && (
-              <div className="page" style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                flexDirection: 'column', gap: 12, minHeight: '60vh',
-              }}>
-                <div style={{ fontSize: 56 }}>{view === 'settings' ? '⚙️' : '❓'}</div>
-                <div style={{ fontFamily: "'Fredoka One', cursive", fontSize: 22, color: 'var(--text)' }}>
-                  {view === 'settings' ? 'Settings' : 'Help & Support'}
-                </div>
-                <div style={{ color: 'var(--text-muted)', fontWeight: 600 }}>Coming soon! 🚀</div>
-              </div>
-            )}
-          </div>
-        </main>
+        <div className="scroll-area" style={{ height: 'calc(100vh - 65px)', overflowY: 'auto' }}>
+          <AppRouter /> {/* כאן הראוטר מחליט מה להציג */}
+        </div>
+      </main>
       </div>
     </>
   );

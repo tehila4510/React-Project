@@ -2,22 +2,22 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../features/User/Redux/userSlice';
 import UserAvatar from '../features/User/Components/UserAvatar';
 import logo from "../../public/logo2.png"
+import {NavLink,useNavigate} from 'react-router-dom';
 
 const NAV = [
   { id: 'home',     icon: '🏠', label: 'Home' },
   { id: 'progress', icon: '📊', label: 'My Progress' },
   { id: 'errors',   icon: '❌', label: 'My Mistakes', badge: true },
-  { id: 'chat',     icon: '🦉', label: 'English Teacher' },
-
+  { id: 'chat',     icon: '🦉', label: 'Glottie Teacher' },
   { id: 'profile',  icon: '👤', label: 'Profile' },
   { id: 'settings', icon: '⚙️', label: 'Settings' },
 ];
 
-export default function Sidebar({ view, setView, errorCount }) {
+export default function Sidebar({ errorCount }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
 
-  // חישוב XP - מה שיש על המשתמש
   const xp    = currentUser?.xp       || 0;
   const maxXp = currentUser?.maxXp    || 2000;
   const xpPct = Math.min((xp / maxXp) * 100, 100);
@@ -25,49 +25,44 @@ export default function Sidebar({ view, setView, errorCount }) {
   const handleLogout = () => {
     dispatch(logout());
   };
-
-  return (
+return (
     <aside className="sidebar">
-      {/* לוגו */}
-      <div className="sidebar-logo" onClick={() => setView('home')}>
-        <span > <img src={logo} alt="logo" width="30px" /></span>
-      
+      <div className="sidebar-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+        <span> <img src={logo} alt="logo" width="30px" /></span>
         <span className="logo-text">GLOTTIE</span>
       </div>
 
-      {/* ניווט */}
       <div className="nav-section">
         <div className="nav-label">Navigation</div>
+        
         {NAV.map((n) => (
-          <div
-            key={n.id}
-            className={`nav-item ${view === n.id ? 'active' : ''}`}
-            onClick={() => setView(n.id)}
+          <NavLink 
+            key={n.id} 
+            to={n.id === 'home' ? '/' : `/${n.id}`} 
+            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
           >
             <span className="nav-icon">{n.icon}</span>
             <span>{n.label}</span>
             {n.badge && errorCount > 0 && (
               <span className="nav-badge">{errorCount}</span>
             )}
-          </div>
+          </NavLink>
         ))}
 
-        {/* כפתור התנתקות */}
-        <div className="nav-item" onClick={handleLogout} style={{ marginTop: 8, color: 'var(--red)' }}>
+        <div className="nav-item" onClick={handleLogout} style={{ marginTop: 8, color: 'var(--red)', cursor: 'pointer' }}>
           <span className="nav-icon">🚪</span>
           <span>Logout</span>
         </div>
       </div>
 
-      {/* פרופיל קטן בתחתית */}
-      <div
-        className="sidebar-profile"
-        style={{ marginTop: 'auto' }}
-        onClick={() => setView('profile')}
+      <NavLink 
+        to="/profile" 
+        className={({ isActive }) => `sidebar-profile ${isActive ? 'active' : ''}`}
+        style={{ marginTop: 'auto', textDecoration: 'none', color: 'inherit' }}
       >
         <div className="profile-mini">
-          <div className="avatar">       
-                  <UserAvatar size={38} />
+          <div className="avatar">      
+            <UserAvatar size={38} />
           </div>
           <div>
             <div className="profile-name">
@@ -84,7 +79,7 @@ export default function Sidebar({ view, setView, errorCount }) {
           </div>
           <div className="xp-label">{xp} / {maxXp} XP</div>
         </div>
-      </div>
+      </NavLink>
     </aside>
   );
 }
