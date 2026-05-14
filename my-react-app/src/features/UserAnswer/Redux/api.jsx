@@ -20,7 +20,8 @@ baseQuery: fetchBaseQuery({
 
     // GET /api/UserAnswer
     getAllUserAnswers: builder.query({
-  query: () => '/UserAnswer/my-answers', // הוספת הנתיב הספציפי למשתמש
+  query: () => '/UserAnswer/my-answers', 
+  // הוספת הנתיב הספציפי למשתמש
   providesTags: ['UserAnswer'],
 
       async onQueryStarted(arg, { queryFulfilled }) {

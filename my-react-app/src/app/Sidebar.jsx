@@ -1,5 +1,4 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../features/User/Redux/userSlice';
 import UserAvatar from '../features/User/Components/UserAvatar';
 import logo from "../../public/logo2.png"
 import {NavLink,useNavigate} from 'react-router-dom';
@@ -9,6 +8,8 @@ import errors from "../../public/errors.png";
 import chat from "../../public/chat.png";
 import profile from "../../public/profile.png";
 import settings from "../../public/settings.png";
+import logoutIcon from "../../public/logout.png";
+import { logout } from '../features/User/Redux/userSlice';
 
 
 const NAV = [
@@ -32,7 +33,7 @@ export default function Sidebar({ errorCount }) {
   const { currentUser } = useSelector((state) => state.user);
 
   const xp    = currentUser?.xp       || 0;
-  const maxXp = currentUser?.maxXp    || 2000;
+  const maxXp = currentUser?.maxXp    || 100;
   const xpPct = Math.min((xp / maxXp) * 100, 100);
 
   const handleLogout = () => {
@@ -63,7 +64,7 @@ return (
         ))}
 
         <div className="nav-item" onClick={handleLogout} style={{ marginTop: 8, color: 'var(--red)', cursor: 'pointer' }}>
-          <span className="nav-icon">🚪</span>
+          <span className="nav-icon"><span> <img src={logoutIcon} alt="logo" width="30px" /></span></span>
           <span>Logout</span>
         </div>
       </div>

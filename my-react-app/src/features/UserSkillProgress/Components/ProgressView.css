@@ -24,7 +24,7 @@
   border: 1px solid #e2e8f0;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   box-sizing: border-box;
-  overflow: hidden;       /* מונע גלישה של תכנים */
+  overflow: hidden;    
 }
 .card:hover {
   transform: translateY(-2px);
@@ -83,9 +83,8 @@
 /* ─── Skills Breakdown ────────────────────────────────────── */
 .skills-grid-list {
   display: grid;
-  /* יוצר חלוקה דינמית לעמודות - לפחות 220 פיקסלים לכל מיומנות, כמה שנכנס בשורה */
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px; /* רווח נעים בין המיומנויות */
+  gap: 16px;
 }
 
 .skill-row {
@@ -93,13 +92,12 @@
   align-items: center;
   gap: 14px;
   padding: 12px;
-  background: #f8fafc; /* הוספת רקע עדין לכל קוביה כדי להפריד ביניהן */
+  background: #f8fafc;
   border-radius: 12px;
   border: 1px solid #f1f5f9;
   box-sizing: border-box;
 }
 
-/* ביטלנו את ה-border-bottom הישן כי עכשיו הן כרטיסיות עצמאיות בשורה */
 .skill-row:last-child { border-bottom: 1px solid #f1f5f9; }
 
 .skill-icon {
@@ -148,13 +146,11 @@
   transition: width 0.5s ease;
 }
 
-/* ─── Activity Heatmap ────────────────────────────────────── */
 .heatmap {
   display: grid;
-  /* שינוי מ-35 ל-25 כדי שיתאים בדיוק לכמות הימים שהגדרת ב-React */
   grid-template-columns: repeat(25, 1fr);
   gap: 4px;
-  width: 100%; /* מבטיח פריסה מלאה לאורך הכרטיסייה */
+  width: 100%; 
 }
 .heat-cell {
   aspect-ratio: 1;

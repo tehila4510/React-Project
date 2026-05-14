@@ -1,57 +1,53 @@
-
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import "../quizStyles.css";
 import {
   useStartSessionMutation,
   useEndSessionMutation,
   useLazyGetNextQuestionQuery,
   useSubmitAnswerMutation,
-} from '../Redux/api';
+} from '../Redux/api'; 
 
 import QuizProgress   from './QuizProgress';
 import QuestionCard   from './QuestionCard';
 import AnswerFeedback from './AnswerFeedback';
 import QuizResult     from './QuizResult';
-import quizStyles     from '../quizStyles';
 
 const MAX_QUESTIONS = 10; 
+
 export default function QuizPage({ skill, onClose }) {
   const { currentUser } = useSelector((state) => state.user);
-  const userId           = currentUser?.userId;
+  const userId = currentUser?.userId;
 
   // ── State ──────────────────────────────────────────────────────────────────
-  const [phase, setPhase]               = useState('loading');  // loading | question | feedback | result
+  const [phase, setPhase]               = useState('loading');  
   const [sessionId, setSessionId]       = useState(null);
   const [question, setQuestion]         = useState(null);
-  const [selectedOption, setSelectedOption] = useState(null);   // { optionId, optionText }
-  const [feedback, setFeedback]         = useState(null);       // QuestionReviewDto
+  const [selectedOption, setSelectedOption] = useState(null);   
+  const [feedback, setFeedback]         = useState(null);       
   const [questionCount, setQuestionCount] = useState(0);
   const [correctCount, setCorrectCount]   = useState(0);
-  const [sessionResult, setSessionResult] = useState(null);     // SessionDto
+  const [sessionResult, setSessionResult] = useState(null);     
   const [submitError, setSubmitError]   = useState(null);
 
   // ── RTK Query ──────────────────────────────────────────────────────────────
-  const [startSession]            = useStartSessionMutation();
-  const [endSession]              = useEndSessionMutation();
-  const [fetchNextQuestion]       = useLazyGetNextQuestionQuery();
+  const [startSession] = useStartSessionMutation();
+  const [endSession]   = useEndSessionMutation();
+  const [fetchNextQuestion] = useLazyGetNextQuestionQuery();
   const [submitAnswer, { isLoading: submitting }] = useSubmitAnswerMutation();
 
-  // ── Start on mount ──────────────────────────────────────────────────────────
-  useEffect(() => {
-    initSession();
-    // eslint-disable-next-line
-  }, []); 
+  // ── Logic Functions ────────────────────────────────────────────────────────
 
-  const initSession = async () => {
+  const finishSession = async (sid) => {
+    setPhase('loading');
     try {
-      setPhase('loading');
-      const sid = await startSession().unwrap();
-      setSessionId(sid);
-      await loadNextQuestion(sid, 0);
+      const result = await endSession(sid || sessionId).unwrap();
+      setSessionResult(result);
+      setPhase('result');
     } catch (err) {
-      console.error('Failed to start session', err);
-      setSubmitError('Could not start quiz. Please try again.');
-      setPhase('question');
+      console.error('End session failed', err);
+      setSessionResult({ score: 0, xp: 0 });
+      setPhase('result');
     }
   };
 
@@ -63,7 +59,6 @@ export default function QuizPage({ skill, onClose }) {
 
     try {
       const q = await fetchNextQuestion({
-        
         sessionId: sid || sessionId,
         skillId: skill?.skillId || null,
       }).unwrap();
@@ -78,12 +73,23 @@ export default function QuizPage({ skill, onClose }) {
       setPhase('question');
     } catch (err) {
       console.error('Failed to load question', err);
-
       await finishSession(sid || sessionId);
     }
   };
 
-  // ── Submit answer ───────────────────────────────────────────────────────────
+  const initSession = async () => {
+    try {
+      const sid = await startSession().unwrap();
+      setSessionId(sid);
+      await loadNextQuestion(sid, 0);
+    } catch (err) {
+      console.error('Failed to start session', err);
+      setSubmitError('Could not start quiz. Please try again.');
+      setPhase('question');
+    }
+  };
+
+  // ── Event Handlers ──────────────────────────────────────────────────────────
   const handleSubmit = async () => {
     if (!selectedOption || !question) return;
     setSubmitError(null);
@@ -98,8 +104,7 @@ export default function QuizPage({ skill, onClose }) {
         selectedOptionId: selectedOption.optionId,
       };
 
-      const review = await submitAnswer({answerDto: dto }).unwrap();
-
+      const review = await submitAnswer({ answerDto: dto }).unwrap();
       setFeedback(review);
       if (review.isCorrect) setCorrectCount((c) => c + 1);
       setPhase('feedback');
@@ -109,7 +114,6 @@ export default function QuizPage({ skill, onClose }) {
     }
   };
 
-  // ── Next question ───────────────────────────────────────────────────────────
   const handleNext = async () => {
     if (questionCount >= MAX_QUESTIONS) {
       await finishSession(sessionId);
@@ -118,37 +122,24 @@ export default function QuizPage({ skill, onClose }) {
     }
   };
 
-  // ── End session ─────────────────────────────────────────────────────────────
-  const finishSession = async (sid) => {
-    setPhase('loading');
-    try {
-      const result = await endSession(sid || sessionId).unwrap();
-      setSessionResult(result);
-      setPhase('result');
-    } catch (err) {
-      console.error('End session failed', err);
-
-      setSessionResult({ score: 0, xp: 0 });
-      setPhase('result');
-    }
-  };
-
-  // ── Play again ──────────────────────────────────────────────────────────────
   const handlePlayAgain = () => {
     setSessionResult(null);
     setQuestionCount(0);
     setCorrectCount(0);
+    setPhase('loading');
     initSession();
   };
+
+  // ── Side Effects ────────────────────────────────────────────────────────────
+  useEffect(() => {
+    initSession();
+    // eslint-disable-next-line
+  }, []); 
 
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
     <>
-      <style>{quizStyles}</style>
-
       <div className="quiz-wrapper">
-
-        {/* ── Result ── */}
         {phase === 'result' && (
           <>
             <QuizProgress
@@ -168,7 +159,6 @@ export default function QuizPage({ skill, onClose }) {
           </>
         )}
 
-        {/* ── Loading ── */}
         {phase === 'loading' && (
           <>
             <QuizProgress
@@ -180,24 +170,18 @@ export default function QuizPage({ skill, onClose }) {
             />
             <div className="quiz-loading">
               <div className="quiz-spinner" />
-              Loading next question...
+              Loading...
             </div>
           </>
         )}
 
-        {/* ── Question + Feedback ── */}
         {(phase === 'question' || phase === 'feedback') && (
           <>
-            {/* Progress */}
             <QuizProgress
               current={questionCount}
               total={MAX_QUESTIONS}
-              skillName={skill?.name}
-              skillIcon={skill?.icon}
               onClose={onClose}
             />
-
-            {/* שאלה */}
             <QuestionCard
               question={question}
               selectedOption={selectedOption?.optionId}
@@ -205,8 +189,6 @@ export default function QuizPage({ skill, onClose }) {
               feedback={feedback}
               submitted={phase === 'feedback'}
             />
-
-            {/* שגיאה */}
             {submitError && (
               <div style={{
                 width: '100%', maxWidth: 680,
@@ -218,8 +200,6 @@ export default function QuizPage({ skill, onClose }) {
                 ⚠️ {submitError}
               </div>
             )}
-
-            {/* לפני שליחה — כפתור Submit */}
             {phase === 'question' && (
               <button
                 className="quiz-submit-btn"
@@ -230,8 +210,6 @@ export default function QuizPage({ skill, onClose }) {
                 {submitting ? 'Checking...' : '✅ Submit Answer'}
               </button>
             )}
-
-            {/* אחרי שליחה — פידבק + Next */}
             {phase === 'feedback' && (
               <AnswerFeedback
                 feedback={feedback}

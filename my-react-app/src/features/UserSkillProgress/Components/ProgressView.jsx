@@ -129,7 +129,6 @@ export default function ProgressView() {
           </div>
         </div>
 
-        {/* Skills Breakdown */}
         <div className="card span-4">
           <h3>Skills Breakdown</h3>
           <div className="skills-grid-list">

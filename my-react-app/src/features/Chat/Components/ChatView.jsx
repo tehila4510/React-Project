@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { STYLES } from "../style.js";
 import { askChatTeacher } from "../Redux/api";
 import teacherAI from "../../../../public/teacherAI.png";
 import teacherAI2 from "../../../../public/teacherAI2.PNG";
 import teacherAI3 from "../../../../public/teacherAI3.PNG";
 import UserAvatar from "../../User/Components/UserAvatar.jsx";
+import "../style.css";
 
 // ─── SUGGESTIONS ──────────────────────────────────────────────────────────────
 const SUGGESTIONS = [
@@ -22,9 +22,7 @@ function formatTime(date) {
   return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
 
-// Renders bold (**text**) from AI markdown
 function renderMarkdown(text) {
-  // ** → bold, * → em
   const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g);
   return parts.map((part, i) => {
     if (part.startsWith("**") && part.endsWith("**"))
@@ -88,7 +86,6 @@ export default function ChatView() {
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
 
-  // Scroll to bottom on new message
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
@@ -150,8 +147,6 @@ export default function ChatView() {
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <>
-      <style>{STYLES}</style>
-
       <div className="chat-page">
         {/* Header */}
         <div className="chat-header">

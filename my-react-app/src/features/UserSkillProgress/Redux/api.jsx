@@ -4,9 +4,7 @@ export const userSkillProgressApi = createApi({
  reducerPath: 'userSkillProgressApi',
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://localhost:7185/api',
-    // כאן אנחנו מוסיפים את ה-Token באופן אוטומטי לכל הבקשות
     prepareHeaders: (headers, { getState }) => {
-      // שליפת ה-token מה-state (שנה את הנתיב בהתאם למבנה ה-Store שלך)
       const token = getState().user.token || localStorage.getItem('token');
       
       if (token) {
@@ -21,7 +19,7 @@ export const userSkillProgressApi = createApi({
 
     // GET /api/UserSkillProgress 
     getAllUserSkillProgress: builder.query({
-      query: () => '/UserSkillProgress/my-skill-progress', // הוספת הנתיב הספציפי למשתמש
+      query: () => '/UserSkillProgress/my-skill-progress', 
       providesTags: ['UserSkillProgress'],
 
       async onQueryStarted(arg, { queryFulfilled }) {

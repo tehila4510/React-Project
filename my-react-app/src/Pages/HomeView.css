@@ -40,7 +40,7 @@
 .home-hero {
   position: relative;
   background: var(--g-white);
-  /* מסגרת עדינה ויוקרתית */
+
   border: 1px solid rgba(123, 94, 255, 0.15); 
   border-radius: 24px;
   padding: 36px 40px;

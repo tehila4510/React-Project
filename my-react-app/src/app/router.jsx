@@ -4,6 +4,7 @@ import ErrorsView from '../features/UserAnswer/Components/ErrorsView';
 import ProfileView from '../features/User/Components/ProfileView';
 import ChatView from '../features/Chat/Components/ChatView';
 import HomeView from '../Pages/HomeView';
+import commingSoon from "../../public/comming soon.png";
 
 const AppRouter = () => {
   return (
@@ -15,8 +16,8 @@ const AppRouter = () => {
       <Route path="/profile" element={<ProfileView />} />
       <Route path="/chat" element={<ChatView />} />
 
-      <Route path="/settings" element={<PlaceholderPage icon="⚙️" title="Settings" />} />
-      <Route path="/help" element={<PlaceholderPage icon="❓" title="Help & Support" />} />
+      <Route path="/settings" element={<PlaceholderPage/>} />
+      <Route path="/help" element={<PlaceholderPage />} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
@@ -32,8 +33,11 @@ const PlaceholderPage = ({ icon, title }) => (
     <div style={{ fontFamily: "'Fredoka One', cursive", fontSize: 22, color: 'var(--text)' }}>
       {title}
     </div>
-    <div style={{ color: 'var(--text-muted)', fontWeight: 600 }}>Coming soon! 🚀</div>
+    <div style={{ color: 'var(--text-muted)', fontWeight: 600 }}>Coming soon!
+    </div>
+    <span> <img src={commingSoon} alt="logo" width="200px" /></span>
   </div>
-);
+);    
+
 
 export default AppRouter;

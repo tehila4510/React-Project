@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 // קומפוננטות
 import Sidebar       from './Sidebar';
 import UserAvatar from '../features/User/Components/UserAvatar';
+
 // סגנונות
 import '../styles/variables.css';
 import AppRouter from './router';
@@ -14,6 +15,8 @@ import chat from "../../public/chat.png";
 import profile from "../../public/profile.png";
 import settings from "../../public/settings.png";
 import help from "../../public/help.png";
+import streak from "../../public/streak.png";
+import xp from "../../public/xp.png";
 
 // פרטיקלים
 function Particles() {
@@ -50,25 +53,25 @@ const TITLES = {
 
 export default function GlottieApp() {
   const { currentUser }           = useSelector((state) => state.user);
-  const location = useLocation(); // מקבל את הנתיב הנוכחי
+  const location = useLocation(); 
 
   return (
     <>
       <Particles />
       <div className="app">
-        <Sidebar /> {/* הורדנו את ה-Props של ה-view */}
+        <Sidebar /> 
       <main className="main">
         <div className="topbar">
-          <div className="topbar-title">{TITLES[location.pathname] ||  <span> <img src={home} alt="logo" width="30px" />  home</span>}</div>
+          <div className="topbar-title">{TITLES[location.pathname] ||  <span> <img src={home} alt="logo" width="20px" />  home</span>}</div>
           <div className="topbar-stats">
-             <div className="topbar-streak">🔥 {currentUser?.streak || 0}</div>
-             <div className="topbar-xp">⚡ {currentUser?.xp || 0} XP</div>
+             <div className="topbar-streak"><span> <img src={streak} alt="logo" width="30px" /></span> {currentUser?.streak || 0}</div>
+             <div className="topbar-xp"><span> <img src={xp} alt="logo" width="33px" /></span>  {currentUser?.xp || 0} XP</div>
              <UserAvatar size={38} />
           </div>
         </div>
 
         <div className="scroll-area" style={{ height: 'calc(100vh - 65px)', overflowY: 'auto' }}>
-          <AppRouter /> {/* כאן הראוטר מחליט מה להציג */}
+          <AppRouter />
         </div>
       </main>
       </div>

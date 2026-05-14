@@ -1,10 +1,6 @@
-// QuizResult.jsx
-// מוצג בסוף הסשן עם ציון + XP
-// props: result = SessionDto { sessionId, userId, score, xp, durationInMinutes }
-//        correctCount, totalQuestions, onHome, onPlayAgain
-
 import { useEffect, useState } from 'react';
 import home from "../../../../public/home.png";
+import xp from "../../../../public/xp.png";
 function ScoreRing({ score }) {
   const r    = 56;
   const circ = 2 * Math.PI * r;
@@ -23,7 +19,6 @@ function ScoreRing({ score }) {
           fill="none" stroke="#EDE9FF" strokeWidth="10"
           cx="70" cy="70" r={r}
         />
-        {/* Fill */}
         <circle
           fill="none" stroke={color} strokeWidth="10" strokeLinecap="round"
           cx="70" cy="70" r={r}
@@ -32,7 +27,6 @@ function ScoreRing({ score }) {
           transform="rotate(-90 70 70)"
           style={{ transition: 'stroke-dashoffset 1.5s cubic-bezier(0.34,1.56,0.64,1)' }}
         />
-        {/* Text */}
         <text x="70" y="65" className="score-ring-label" textAnchor="middle" dominantBaseline="middle"
           style={{ fontFamily: "'Fredoka One',cursive", fontSize: 28, fill: '#1A1440', fontWeight: 900 }}>
           {pct}%
@@ -46,7 +40,6 @@ function ScoreRing({ score }) {
   );
 }
 
-// קונפטי
 function Confetti() {
   const dots = Array.from({ length: 20 }, (_, i) => ({
     id: i,
@@ -74,7 +67,6 @@ export default function QuizResult({ result, correctCount, totalQuestions, onHom
     ? `${Math.round(result.durationInMinutes)} min`
     : '—';
 
-  // אנימציית XP
   useEffect(() => {
     const timer = setTimeout(() => setXpAnimated(xpGained), 300);
     return () => clearTimeout(timer);
@@ -104,10 +96,8 @@ export default function QuizResult({ result, correctCount, totalQuestions, onHom
         <div className="result-title">{getTitle()}</div>
         <div className="result-subtitle">{getSub()}</div>
 
-        {/* Ring */}
         <ScoreRing score={score} />
 
-        {/* Stats */}
         <div className="result-stats">
           <div className="result-stat">
             <div className="r-val">{correctCount}</div>
@@ -123,10 +113,9 @@ export default function QuizResult({ result, correctCount, totalQuestions, onHom
           </div>
         </div>
 
-        {/* XP gained */}
         <div className="xp-gained-wrap">
           <div className="xp-gained-label">
-            <span>⚡ XP Earned</span>
+            <span><span> <img src={xp} alt="logo" width="20px" /></span>  XP Earned</span>
             <span style={{ color: '#7B5EFF', fontSize: 15 }}>+{xpGained} XP</span>
           </div>
           <div className="xp-bar-outer">
@@ -137,7 +126,6 @@ export default function QuizResult({ result, correctCount, totalQuestions, onHom
           </div>
         </div>
 
-        {/* Buttons */}
         <button className="result-home-btn" onClick={onHome}>
            <span> <img src={home} alt="logo" width="30px" /> </span> Back to Home
         </button>
