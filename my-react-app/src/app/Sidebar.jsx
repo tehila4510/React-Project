@@ -3,14 +3,27 @@ import { logout } from '../features/User/Redux/userSlice';
 import UserAvatar from '../features/User/Components/UserAvatar';
 import logo from "../../public/logo2.png"
 import {NavLink,useNavigate} from 'react-router-dom';
+import home from "../../public/home.png";
+import progress from "../../public/progress.png";
+import errors from "../../public/errors.png";
+import chat from "../../public/chat.png";
+import profile from "../../public/profile.png";
+import settings from "../../public/settings.png";
+
 
 const NAV = [
-  { id: 'home',     icon: '🏠', label: 'Home' },
-  { id: 'progress', icon: '📊', label: 'My Progress' },
-  { id: 'errors',   icon: '❌', label: 'My Mistakes', badge: true },
-  { id: 'chat',     icon: '🦉', label: 'Glottie Teacher' },
-  { id: 'profile',  icon: '👤', label: 'Profile' },
-  { id: 'settings', icon: '⚙️', label: 'Settings' },
+  { id: 'home',     icon: <span> <img src={home} alt="home" width="30px" /></span>
+, label: 'Home' },
+  { id: 'progress', icon:        <span> <img src={progress} alt="logo" width="30px" /></span>
+, label: 'My Progress' },
+  { id: 'errors',   icon:        <span> <img src={errors} alt="logo" width="30px" /></span>
+, label: 'My Mistakes', badge: true },
+  { id: 'chat',     icon:        <span> <img src={chat} alt="logo" width="30px" /></span>
+, label: 'Glottie Teacher' },
+  { id: 'profile',  icon:        <span> <img src={profile} alt="logo" width="30px" /></span>
+, label: 'Profile' },
+  { id: 'settings', icon:        <span> <img src={settings} alt="logo" width="30px" /></span>
+, label: 'Settings' },
 ];
 
 export default function Sidebar({ errorCount }) {

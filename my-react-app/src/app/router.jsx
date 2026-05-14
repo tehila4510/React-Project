@@ -1,33 +1,28 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import HomeView from '../features/UserSkillProgress/Components/HomeView';
 import ProgressView from '../features/UserSkillProgress/Components/ProgressView';
 import ErrorsView from '../features/UserAnswer/Components/ErrorsView';
 import ProfileView from '../features/User/Components/ProfileView';
 import ChatView from '../features/Chat/Components/ChatView';
+import HomeView from '../Pages/HomeView';
 
 const AppRouter = () => {
   return (
     <Routes>
-      {/* ניתוב ברירת מחדל */}
       <Route path="/" element={<HomeView />} />
       
-      {/* ניתובים לפי הפיצ'רים */}
       <Route path="/progress" element={<ProgressView />} />
       <Route path="/errors" element={<ErrorsView />} />
       <Route path="/profile" element={<ProfileView />} />
       <Route path="/chat" element={<ChatView />} />
 
-      {/* דפים בבנייה (Settings/Help) */}
       <Route path="/settings" element={<PlaceholderPage icon="⚙️" title="Settings" />} />
       <Route path="/help" element={<PlaceholderPage icon="❓" title="Help & Support" />} />
 
-      {/* ניתוב לכל מקרה של כתובת לא מוכרת - מחזיר לבית */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };
 
-// קומפוננטה זמנית לדפים בבנייה (כדי לא להעמיס את הקובץ)
 const PlaceholderPage = ({ icon, title }) => (
   <div className="page" style={{
     display: 'flex', alignItems: 'center', justifyContent: 'center',

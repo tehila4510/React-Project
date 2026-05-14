@@ -2,17 +2,18 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 // קומפוננטות
 import Sidebar       from './Sidebar';
-
-// import HomeView      from '../features/UserSkillProgress/Components/HomeView';
-// import ProgressView  from '../features/UserSkillProgress/Components/ProgressView';
-// import ErrorsView    from '../features/UserAnswer/Components/ErrorsView';
-// import ProfileView   from '../features/User/Components/ProfileView';
-// import ChatView      from '../features/Chat/Components/ChatView';
-
 import UserAvatar from '../features/User/Components/UserAvatar';
 // סגנונות
 import '../styles/variables.css';
 import AppRouter from './router';
+
+import home from "../../public/home.png";
+import progress from "../../public/progress.png";
+import errors from "../../public/errors.png";
+import chat from "../../public/chat.png";
+import profile from "../../public/profile.png";
+import settings from "../../public/settings.png";
+import help from "../../public/help.png";
 
 // פרטיקלים
 function Particles() {
@@ -37,13 +38,14 @@ function Particles() {
   );
 }
 const TITLES = {
-  '/': '🏠 Home',
-  '/progress': '📊 Progress',
-  '/errors': '❌ My Mistakes',
-  '/profile': '👤 Profile',
-  '/chat': '🦉 Glottie Teacher',
-  '/settings': '⚙️ Settings',
-  '/help': '❓ Help',
+  '/':         <span> <img src={home} alt="logo" width="30px" />  Home</span>
+,
+  '/progress': <span> <img src={progress} alt="logo" width="30px" />  Progress</span>,
+  '/errors': <span> <img src={errors} alt="logo" width="30px" />  My Mistakes</span>,
+  '/profile': <span> <img src={profile} alt="logo" width="30px" />  Profile</span>,
+  '/chat': <span> <img src={chat} alt="logo" width="30px" />  Glottie Teacher</span>,
+  '/settings': <span> <img src={settings} alt="logo" width="30px" />  Settings</span>,
+  '/help': <span> <img src={help} alt="logo" width="30px" />  Help</span> ,
 };
 
 export default function GlottieApp() {
@@ -57,7 +59,7 @@ export default function GlottieApp() {
         <Sidebar /> {/* הורדנו את ה-Props של ה-view */}
       <main className="main">
         <div className="topbar">
-          <div className="topbar-title">{TITLES[location.pathname] || '🏠 Home'}</div>
+          <div className="topbar-title">{TITLES[location.pathname] ||  <span> <img src={home} alt="logo" width="30px" />  home</span>}</div>
           <div className="topbar-stats">
              <div className="topbar-streak">🔥 {currentUser?.streak || 0}</div>
              <div className="topbar-xp">⚡ {currentUser?.xp || 0} XP</div>

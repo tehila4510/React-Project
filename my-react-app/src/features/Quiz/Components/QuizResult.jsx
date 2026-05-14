@@ -4,7 +4,7 @@
 //        correctCount, totalQuestions, onHome, onPlayAgain
 
 import { useEffect, useState } from 'react';
-
+import home from "../../../../public/home.png";
 function ScoreRing({ score }) {
   const r    = 56;
   const circ = 2 * Math.PI * r;
@@ -139,7 +139,7 @@ export default function QuizResult({ result, correctCount, totalQuestions, onHom
 
         {/* Buttons */}
         <button className="result-home-btn" onClick={onHome}>
-          🏠 Back to Home
+           <span> <img src={home} alt="logo" width="30px" /> </span> Back to Home
         </button>
         {onPlayAgain && (
           <button className="result-again-btn" onClick={onPlayAgain}>
