@@ -63,11 +63,11 @@ export default function ErrorsView() {
             <div className="ev-answers">
               <div className="ev-chip wrong">
                 <div className="ev-chip-label">❌ Your answer</div>
-                <div className="ev-chip-value">{answer.answerText}</div>
+                <div className="ev-chip-value">{answer.userAnswerText }</div>
               </div>
               <div className="ev-chip correct">
                 <div className="ev-chip-label">✅ Correct</div>
-                <div className="ev-chip-value">{answer.correctAnswer || '—'}</div>
+                <div className="ev-chip-value">{answer.correctAnswerText || '—'}</div>
               </div>
             </div>
 
@@ -82,7 +82,7 @@ export default function ErrorsView() {
                     : 'Unknown date'}
                 </span>
               </div>
-              <button className="ev-retry-btn">🔄 Practice</button>
+              {/* <button className="ev-retry-btn">🔄 Practice</button> */}
             </div>
           </div>
         ))}
