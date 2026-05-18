@@ -5,7 +5,21 @@ import ProfileView from '../features/User/Components/ProfileView';
 import ChatView from '../features/Chat/Components/ChatView';
 import HomeView from '../Pages/HomeView';
 import commingSoon from "../../public/comming soon.png";
+import QuizPage from '../features/Quiz/Components/QuizPage';
+import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
+function QuizRoute() {
+  const { skillId } = useParams();
+  const navigate = useNavigate();
+
+  return (
+    <QuizPage
+      skillId={parseInt(skillId)}
+      onClose={() => navigate('/')}
+    />
+  );
+}
 const AppRouter = () => {
   return (
     <Routes>
@@ -18,8 +32,11 @@ const AppRouter = () => {
 
       <Route path="/settings" element={<PlaceholderPage/>} />
       <Route path="/help" element={<PlaceholderPage />} />
+      
+      <Route path="/quiz/:skillId" element={<QuizRoute />} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
+
     </Routes>
   );
 };

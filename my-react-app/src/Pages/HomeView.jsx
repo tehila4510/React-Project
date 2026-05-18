@@ -140,7 +140,7 @@ export default function HomeView() {
               if (selectedSkill.name === 'Chat with Glottie ') {
                 navigate('/chat');
               } else {
-                setShowPath(true);
+                navigate(`/quiz/${selectedSkill.skillId}`);
               }
             }}
           >
