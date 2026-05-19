@@ -36,7 +36,6 @@ export default function AnswerFeedback({ feedback, onNext, isLastQuestion }) {
         </div>
       </div>
 
-      {/* כפתור הבא */}
       <button
         className={`quiz-next-btn ${isCorrect ? 'correct' : 'wrong'}`}
         onClick={onNext}

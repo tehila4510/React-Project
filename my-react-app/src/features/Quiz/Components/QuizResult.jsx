@@ -1,24 +1,22 @@
 import { useEffect, useState } from 'react';
 import home from "../../../../public/home.png";
 import xp from "../../../../public/xp.png";
-function ScoreRing({ score }) {
-  const r    = 56;
-  const circ = 2 * Math.PI * r;
-  const pct  = Math.min(Math.max(score, 0), 100);
+import '../styles/quizResult.css'; 
 
-  const color =
-    pct >= 80 ? '#22C67A' :
-    pct >= 60 ? '#FFB800' :
-    '#FF5C7A';
+function ScoreRing({ score }) {
+  const r = 56;
+  const circ = 2 * Math.PI * r;
+  const pct = Math.min(Math.max(score, 0), 100);
+
+  const color = 
+    pct >= 80 ? '#10b981' : 
+    pct >= 60 ? '#f59e0b' : 
+    '#f43f5e';
 
   return (
     <div className="score-ring-wrap">
       <svg width="140" height="140" viewBox="0 0 140 140">
-        {/* Track */}
-        <circle
-          fill="none" stroke="#EDE9FF" strokeWidth="10"
-          cx="70" cy="70" r={r}
-        />
+        <circle fill="none" stroke="#f1f5f9" strokeWidth="10" cx="70" cy="70" r={r} />
         <circle
           fill="none" stroke={color} strokeWidth="10" strokeLinecap="round"
           cx="70" cy="70" r={r}
@@ -27,18 +25,19 @@ function ScoreRing({ score }) {
           transform="rotate(-90 70 70)"
           style={{ transition: 'stroke-dashoffset 1.5s cubic-bezier(0.34,1.56,0.64,1)' }}
         />
-        <text x="70" y="65" className="score-ring-label" textAnchor="middle" dominantBaseline="middle"
-          style={{ fontFamily: "'Fredoka One',cursive", fontSize: 28, fill: '#1A1440', fontWeight: 900 }}>
+        <text x="70" y="65" textAnchor="middle" dominantBaseline="middle" className="score-ring-label"
+          style={{ fontSize: 28, fill: '#0f172a', fontWeight: 900, fontFamily: 'Inter' }}>
           {pct}%
         </text>
         <text x="70" y="90" textAnchor="middle"
-          style={{ fontFamily: "'Nunito',sans-serif", fontSize: 11, fill: '#7B72A0', fontWeight: 800 }}>
-          SCORE
+          style={{ fontSize: 10, fill: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          Final Score
         </text>
       </svg>
     </div>
   );
 }
+
 
 function Confetti() {
   const dots = Array.from({ length: 20 }, (_, i) => ({
@@ -57,15 +56,13 @@ function Confetti() {
       ))}
     </>
   );
-}
+
 
 export default function QuizResult({ result, correctCount, totalQuestions, onHome, onPlayAgain }) {
   const [xpAnimated, setXpAnimated] = useState(0);
-  const score     = result?.score       || 0;
-  const xpGained  = result?.xp          || 0;
-  const duration  = result?.durationInMinutes
-    ? `${Math.round(result.durationInMinutes)} min`
-    : '—';
+  const score = result?.score || 0;
+  const xpGained = result?.xp || 0;
+  const duration = result?.durationInMinutes ? `${Math.round(result.durationInMinutes)} min` : '—';
 
   useEffect(() => {
     const timer = setTimeout(() => setXpAnimated(xpGained), 300);
@@ -75,26 +72,18 @@ export default function QuizResult({ result, correctCount, totalQuestions, onHom
   const isGood = score >= 70;
   const isPerfect = score >= 90;
 
-  const getTitle = () => {
-    if (isPerfect) return 'Outstanding! 🏆';
-    if (isGood)   return 'Well Done! 🎉';
-    return 'Keep Practicing! 💪';
-  };
-
-  const getSub = () => {
-    if (isPerfect) return "You're on fire! Perfect performance!";
-    if (isGood)    return 'Great job! You\'re improving fast!';
-    return 'Every mistake is a step forward. Keep going!';
-  };
-
   return (
     <div className="result-wrapper">
-      {isPerfect && <Confetti />}
+      {(isPerfect || isGood) && <Confetti />}
 
       <div className="result-card">
-        <span className="result-owl">{isPerfect ? '🦉✨' : isGood ? '🦉' : '🦉'}</span>
-        <div className="result-title">{getTitle()}</div>
-        <div className="result-subtitle">{getSub()}</div>
+        <span className="result-owl">{isPerfect ? '🥇' : '🎉'}</span>
+        <div className="result-title">
+          {isPerfect ? 'Outstanding!' : isGood ? 'Great Job!' : 'Keep it up!'}
+        </div>
+        <div className="result-subtitle">
+          {isPerfect ? "You've mastered this lesson!" : "You're making great progress!"}
+        </div>
 
         <ScoreRing score={score} />
 
@@ -109,31 +98,30 @@ export default function QuizResult({ result, correctCount, totalQuestions, onHom
           </div>
           <div className="result-stat">
             <div className="r-val">{duration}</div>
-            <div className="r-lbl">Duration</div>
+            <div className="r-lbl">Time</div>
           </div>
         </div>
 
         <div className="xp-gained-wrap">
           <div className="xp-gained-label">
-            <span><span> <img src={xp} alt="logo" width="20px" /></span>  XP Earned</span>
-            <span style={{ color: '#7B5EFF', fontSize: 15 }}>+{xpGained} XP</span>
+            <span><img src={xp} alt="xp" width="18px" /> XP Earned</span>
+            <span style={{ color: '#4f46e5' }}>+{xpGained} XP</span>
           </div>
           <div className="xp-bar-outer">
-            <div
-              className="xp-bar-inner"
-              style={{ width: `${Math.min((xpAnimated / 50) * 100, 100)}%` }}
-            />
+            <div className="xp-bar-inner" style={{ width: `${Math.min((xpAnimated / 50) * 100, 100)}%` }} />
           </div>
         </div>
 
-        <button className="result-home-btn" onClick={onHome}>
-           <span> <img src={home} alt="logo" width="30px" /> </span> Back to Home
-        </button>
-        {onPlayAgain && (
-          <button className="result-again-btn" onClick={onPlayAgain}>
-            🔄 Play Again
+        <div className="result-actions">
+          <button className="result-home-btn" onClick={onHome}>
+            <img src={home} alt="home" width="20px" style={{filter: 'invert(1)'}} /> Back to Home
           </button>
-        )}
+          {onPlayAgain && (
+            <button className="result-again-btn" onClick={onPlayAgain}>
+              🔄 Try Again
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -1,58 +1,72 @@
-import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import "../quizStyles.css";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import "../styles/quizStyles.css";
 import {
   useStartSessionMutation,
   useEndSessionMutation,
   useLazyGetNextQuestionQuery,
   useSubmitAnswerMutation,
-} from '../Redux/api'; 
+  useLoseHeartMutation,
+} from "../Redux/api";
 
-import QuizProgress   from './QuizProgress';
-import QuestionCard   from './QuestionCard';
-import AnswerFeedback from './AnswerFeedback';
-import QuizResult     from './QuizResult';
+import QuizProgress from "./QuizProgress";
+import QuestionCard from "./QuestionCard";
+import AnswerFeedback from "./AnswerFeedback";
+import QuizResult from "./QuizResult";
 
-const MAX_QUESTIONS = 10; 
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
+} from "@mui/material";
+
+const MAX_QUESTIONS = 10;
 
 export default function QuizPage({ skill, onClose }) {
   const { currentUser } = useSelector((state) => state.user);
   const userId = currentUser?.userId;
 
   // ── State ──────────────────────────────────────────────────────────────────
-  const [phase, setPhase]               = useState('loading');  
-  const [sessionId, setSessionId]       = useState(null);
-  const [question, setQuestion]         = useState(null);
-  const [selectedOption, setSelectedOption] = useState(null);   
-  const [feedback, setFeedback]         = useState(null);       
+  const [phase, setPhase] = useState("loading");
+  const [sessionId, setSessionId] = useState(null);
+  const [question, setQuestion] = useState(null);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [feedback, setFeedback] = useState(null);
   const [questionCount, setQuestionCount] = useState(0);
-  const [correctCount, setCorrectCount]   = useState(0);
-  const [sessionResult, setSessionResult] = useState(null);     
-  const [submitError, setSubmitError]   = useState(null);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [sessionResult, setSessionResult] = useState(null);
+  const [submitError, setSubmitError] = useState(null);
+
+  const [hearts, setHearts] = useState(currentUser?.hearts ?? 5);
+  const [isGameOverDialogOpen, setIsGameOverDialogOpen] = useState(false);
 
   // ── RTK Query ──────────────────────────────────────────────────────────────
   const [startSession] = useStartSessionMutation();
-  const [endSession]   = useEndSessionMutation();
+  const [endSession] = useEndSessionMutation();
   const [fetchNextQuestion] = useLazyGetNextQuestionQuery();
   const [submitAnswer, { isLoading: submitting }] = useSubmitAnswerMutation();
+  const [loseHeart] = useLoseHeartMutation();
 
   // ── Logic Functions ────────────────────────────────────────────────────────
 
   const finishSession = async (sid) => {
-    setPhase('loading');
+    setPhase("loading");
     try {
       const result = await endSession(sid || sessionId).unwrap();
       setSessionResult(result);
-      setPhase('result');
+      setPhase("result");
     } catch (err) {
-      console.error('End session failed', err);
+      console.error("End session failed", err);
       setSessionResult({ score: 0, xp: 0 });
-      setPhase('result');
+      setPhase("result");
     }
   };
 
   const loadNextQuestion = async (sid, count) => {
-    setPhase('loading');
+    setPhase("loading");
     setFeedback(null);
     setSelectedOption(null);
     setSubmitError(null);
@@ -70,9 +84,9 @@ export default function QuizPage({ skill, onClose }) {
 
       setQuestion(q);
       setQuestionCount(count + 1);
-      setPhase('question');
+      setPhase("question");
     } catch (err) {
-      console.error('Failed to load question', err);
+      console.error("Failed to load question", err);
       await finishSession(sid || sessionId);
     }
   };
@@ -83,22 +97,22 @@ export default function QuizPage({ skill, onClose }) {
       setSessionId(sid);
       await loadNextQuestion(sid, 0);
     } catch (err) {
-      console.error('Failed to start session', err);
-      setSubmitError('Could not start quiz. Please try again.');
-      setPhase('question');
+      console.error("Failed to start session", err);
+      setSubmitError("Could not start quiz. Please try again.");
+      setPhase("question");
     }
   };
 
   // ── Event Handlers ──────────────────────────────────────────────────────────
   const handleSubmit = async () => {
-    if (!selectedOption || !question) return;
+    if (selectedOption === null || !question) return;
     setSubmitError(null);
 
     try {
       const dto = {
-        answerRecordId: question.answerRecordId,   
+        answerRecordId: question.answerRecordId,
         userId,
-        questionId:     question.questionId,
+        questionId: question.questionId,
         sessionId,
         userAnswerText: selectedOption.optionText,
         selectedOptionId: selectedOption.optionId,
@@ -106,12 +120,26 @@ export default function QuizPage({ skill, onClose }) {
 
       const review = await submitAnswer({ answerDto: dto }).unwrap();
       setFeedback(review);
-      if (review.isCorrect) setCorrectCount((c) => c + 1);
-      setPhase('feedback');
+      setPhase("feedback");
+
+      if (review.isCorrect) {
+        setCorrectCount((c) => c + 1);
+      } else {
+        const { hasHearts } = await loseHeart().unwrap();
+        setHearts((prev) => (prev > 0 ? prev - 1 : 0));
+        if (!hasHearts) {
+          setIsGameOverDialogOpen(true);
+        }
+      }
     } catch (err) {
-      console.error('Submit failed', err);
-      setSubmitError('Failed to submit answer. Please try again.');
+      console.error("Submit failed", err);
+      setSubmitError("Failed to submit answer. Please try again.");
     }
+  };
+
+  const handleConfirmGameOver = async () => {
+    setIsGameOverDialogOpen(false);
+    await finishSession(sessionId);
   };
 
   const handleNext = async () => {
@@ -126,44 +154,34 @@ export default function QuizPage({ skill, onClose }) {
     setSessionResult(null);
     setQuestionCount(0);
     setCorrectCount(0);
-    setPhase('loading');
+    setPhase("loading");
     initSession();
   };
 
-  // ── Side Effects ────────────────────────────────────────────────────────────
   useEffect(() => {
     initSession();
     // eslint-disable-next-line
-  }, []); 
+  }, []);
 
-  // ── Render ──────────────────────────────────────────────────────────────────
   return (
     <>
       <div className="quiz-wrapper">
-        {phase === 'result' && (
-          <>
-            <QuizProgress
-              current={questionCount}
-              total={questionCount}
-              skillName={skill?.name}
-              skillIcon={skill?.icon}
-              onClose={onClose}
-            />
-            <QuizResult
-              result={sessionResult}
-              correctCount={correctCount}
-              totalQuestions={questionCount}
-              onHome={onClose}
-              onPlayAgain={handlePlayAgain}
-            />
-          </>
+        {phase === "result" && (
+          <QuizResult
+            result={sessionResult}
+            correctCount={correctCount}
+            totalQuestions={questionCount}
+            onHome={onClose}
+            onPlayAgain={handlePlayAgain}
+          />
         )}
 
-        {phase === 'loading' && (
+        {phase === "loading" && (
           <>
             <QuizProgress
               current={questionCount}
               total={MAX_QUESTIONS}
+              hearts={hearts}
               skillName={skill?.name}
               skillIcon={skill?.icon}
               onClose={onClose}
@@ -175,11 +193,12 @@ export default function QuizPage({ skill, onClose }) {
           </>
         )}
 
-        {(phase === 'question' || phase === 'feedback') && (
+        {(phase === "question" || phase === "feedback") && (
           <>
             <QuizProgress
               current={questionCount}
               total={MAX_QUESTIONS}
+              hearts={hearts}
               onClose={onClose}
             />
             <QuestionCard
@@ -187,30 +206,37 @@ export default function QuizPage({ skill, onClose }) {
               selectedOption={selectedOption?.optionId}
               onSelect={setSelectedOption}
               feedback={feedback}
-              submitted={phase === 'feedback'}
+              submitted={phase === "feedback"}
             />
             {submitError && (
-              <div style={{
-                width: '100%', maxWidth: 680,
-                background: '#FFEEF2', color: '#FF5C7A',
-                border: '1.5px solid #FFCCD6',
-                borderRadius: 14, padding: '12px 16px',
-                marginTop: 12, fontWeight: 700, fontSize: 13,
-              }}>
+              <div
+                style={{
+                  width: "100%",
+                  maxWidth: 680,
+                  background: "#FFEEF2",
+                  color: "#FF5C7A",
+                  border: "1.5px solid #FFCCD6",
+                  borderRadius: 14,
+                  padding: "12px 16px",
+                  marginTop: 12,
+                  fontWeight: 700,
+                  fontSize: 13,
+                }}
+              >
                 ⚠️ {submitError}
               </div>
             )}
-            {phase === 'question' && (
+            {phase === "question" && (
               <button
                 className="quiz-submit-btn"
-                style={{ width: '100%', maxWidth: 680, marginTop: 16 }}
+                style={{ width: "100%", maxWidth: 680, marginTop: 16 }}
                 disabled={!selectedOption || submitting}
                 onClick={handleSubmit}
               >
-                {submitting ? 'Checking...' : '✅ Submit Answer'}
+                {submitting ? "Checking..." : "✅ Submit Answer"}
               </button>
             )}
-            {phase === 'feedback' && (
+            {phase === "feedback" && (
               <AnswerFeedback
                 feedback={feedback}
                 onNext={handleNext}
@@ -220,6 +246,66 @@ export default function QuizPage({ skill, onClose }) {
           </>
         )}
       </div>
+
+      <Dialog
+        open={isGameOverDialogOpen}
+        aria-labelledby="game-over-title"
+        aria-describedby="game-over-description"
+        disableEscapeKeyDown
+        onClose={(event, reason) => {
+          if (reason === "backdropClick") return;
+          setIsGameOverDialogOpen(false);
+        }}
+        slotProps={{
+          paper: {
+            style: {
+              borderRadius: 16,
+              padding: 12,
+              direction: "rtl",
+              textAlign: "right",
+            },
+          },
+        }}
+      >
+        <DialogTitle
+          id="game-over-title"
+          style={{ fontWeight: 700, color: "#1976d2" }}
+        >
+          End of session{" "}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText
+            id="game-over-description"
+            style={{ fontSize: 16, color: "#333", marginTop: 8 }}
+          >
+            There are no hearts left available on the server for this session.
+            Click the OK button to view the results summary.{" "}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions
+          style={{
+            justifyContent: "flex-start",
+            paddingRight: 24,
+            paddingLeft: 24,
+            paddingBottom: 16,
+          }}
+        >
+          <Button
+            onClick={handleConfirmGameOver}
+            variant="contained"
+            style={{
+              backgroundColor: "#1976d2",
+              color: "#fff",
+              fontWeight: 700,
+              borderRadius: 8,
+              padding: "6px 16px",
+            }}
+            autoFocus
+          >
+            Confirmation
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
