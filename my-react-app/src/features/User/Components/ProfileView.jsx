@@ -29,7 +29,10 @@ export default function ProfileView() {
 
   const handleProfileSave = async () => {
     try {
-      await updateUser({ id: currentUser.userId, data: profileForm }).unwrap();
+      const formData = new FormData();
+    formData.append('Name', profileForm.name);
+    formData.append('Email', profileForm.email);
+await updateUser({ id: currentUser.userId, data: formData }).unwrap();
       dispatch(updateCurrentUser(profileForm));
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
@@ -37,20 +40,27 @@ export default function ProfileView() {
       alert('Update failed');
     }
   };
+const handleAvatarChange = async (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
 
-  const handleAvatarChange = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setAvatarUploading(true);
-    try {
-      const formData = new FormData();
-      formData.append('avatar', file);
-      await updateUser({ id: currentUser.userId, data: formData }).unwrap();
-      dispatch(updateCurrentUser({ avatarUpdated: Date.now() }));
-    } finally {
-      setAvatarUploading(false);
-    }
-  };
+  setAvatarUploading(true);
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('Name', profileForm.name);
+    formData.append('Email', profileForm.email); 
+
+    const updatedUser = await updateUser({ id: currentUser.userId, data: formData }).unwrap();
+    
+    dispatch(updateCurrentUser(updatedUser)); 
+  } catch (err) {
+    console.error(err);
+    alert('Failed to update avatar');
+  } finally {
+    setAvatarUploading(false);
+  }
+};
 
   if (!currentUser) return <div className="loading-state">Loading...</div>;
 
