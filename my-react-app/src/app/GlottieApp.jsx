@@ -18,28 +18,8 @@ import help from "../../public/help.png";
 import streak from "../../public/streak.png";
 import xp from "../../public/xp.png";
 
-// פרטיקלים
-function Particles() {
-  const items = Array.from({ length: 14 }, (_, i) => ({
-    id:    i,
-    // eslint-disable-next-line react-hooks/purity
-    left:  `${Math.random() * 100}%`,
-    size:  `${4 + Math.random() * 8}px`,
-    dur:   `${9 + Math.random() * 12}s`,
-    delay: `${Math.random() * 12}s`,
-    color: ['var(--purple)', 'var(--blue)', 'var(--yellow)', 'var(--green)'][i % 4],
-  }));
-  return (
-    <div className="particles">
-      {items.map((p) => (
-        <div key={p.id} className="particle" style={{
-          left: p.left, width: p.size, height: p.size,
-          background: p.color, animationDuration: p.dur, animationDelay: p.delay,
-        }} />
-      ))}
-    </div>
-  );
-}
+import Particles from './Particles';
+
 const TITLES = {
   '/':         <span> <img src={home} alt="logo" width="30px" />  Home</span>
 ,
