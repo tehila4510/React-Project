@@ -66,6 +66,8 @@ export default function GlottieApp() {
           <div className="topbar-stats">
              <div className="topbar-streak"><span> <img src={streak} alt="logo" width="30px" /></span> {currentUser?.streak || 0}</div>
              <div className="topbar-xp"><span> <img src={xp} alt="logo" width="33px" /></span>  {currentUser?.xp || 0} XP</div>
+                         <div className="topbar-hearts"><span style={{ fontSize: '18px', marginRight: '4px' }}>❤️</span> {currentUser?.hearts !== undefined ? currentUser.hearts : 5} Hearts</div>
+
              <UserAvatar size={38} />
           </div>
         </div>

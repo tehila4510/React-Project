@@ -69,6 +69,7 @@ body {
 .topbar-title  { font-family: 'Fredoka One', cursive; font-size: 20px; color: var(--text); }
 .topbar-streak { display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 13px; color: var(--orange); background: #FFF4EC; padding: 6px 13px; border-radius: 20px; }
 .topbar-xp     { display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 13px; color: var(--purple); background: #EDE9FF; padding: 6px 13px; border-radius: 20px; }
+.topbar-hearts { display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 13px; color: var(--red); background: #FFEEF2; padding: 6px 13px; border-radius: 20px; }
 .topbar-stats  { display: flex; gap: 10px; align-items: center; }
 
 /* ── SIDEBAR ── */

@@ -56,7 +56,7 @@ function Confetti() {
       ))}
     </>
   );
-
+}
 
 export default function QuizResult({ result, correctCount, totalQuestions, onHome, onPlayAgain }) {
   const [xpAnimated, setXpAnimated] = useState(0);
