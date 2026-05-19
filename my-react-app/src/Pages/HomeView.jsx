@@ -100,6 +100,7 @@ export default function HomeView() {
           <div className="hero-sub">Pick a skill, unlock levels, and become a language master!</div>
           <div className="stats-row">
             <div className="stat-chip"><span> <img src={streak} alt="logo" width="25px" /></span> {currentUser?.streak || 0}-day streak</div>
+            <div className="stat-chip"><span style={{ fontSize: '18px', marginRight: '4px' }}>❤️</span> {currentUser?.hearts !== undefined ? currentUser.hearts : 5} Hearts</div>
             <div className="stat-chip"><span> <img src={xp} alt="logo" width="25px" /></span>  {currentUser?.xp || 0} XP</div>
             <div className="stat-chip"><span> <img src={level} alt="logo" width="25px" /></span>  Level {currentUser?.currentLevel || 1}</div>
           </div>

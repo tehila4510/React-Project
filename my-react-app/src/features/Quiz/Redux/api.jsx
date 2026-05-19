@@ -47,7 +47,12 @@ export const quizApi = createApi({
         body: answerDto,
       }),
     }),
-
+loseHeart: builder.mutation({
+  query: () => ({
+    url: '/User/lose-heart',
+    method: 'POST',
+  }),
+}),
   }),
 });
 
@@ -56,4 +61,5 @@ export const {
   useEndSessionMutation,
   useLazyGetNextQuestionQuery,
   useSubmitAnswerMutation,
+  useLoseHeartMutation,
 } = quizApi;

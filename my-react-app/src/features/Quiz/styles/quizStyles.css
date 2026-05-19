@@ -23,7 +23,6 @@
     color: var(--q-text);
   }
 
-  /* Header & Progress - תואם ל-XP Bar באתר שלך */
   .quiz-header {
     width: 100%;
     max-width: 720px;
@@ -53,7 +52,6 @@
     color: var(--q-text-muted);
   }
 
-  /* Question Card - תואם ל-stat-card ו-profile-hero */
   .quiz-card {
     background: #ffffff;
     width: 100%;
@@ -85,7 +83,6 @@
     margin-bottom: 32px;
   }
 
-  /* Options Grid - תואם ל-form-input */
   .options-grid {
     display: grid;
     gap: 12px;
@@ -149,7 +146,6 @@
     background: #fef2f2;
   }
 
-  /* Buttons - תואם ל-btn-primary */
   .quiz-submit-btn, .quiz-next-btn {
     width: 100%;
     max-width: 720px;
@@ -175,7 +171,6 @@
     transform: translateY(-1px);
   }
 
-  /* Feedback Panel */
   .feedback-panel {
     width: 100%;
     max-width: 720px;
@@ -192,3 +187,4 @@
   .feedback-panel.wrong { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
 
   .feedback-title { font-weight: 800; font-size: 18px; margin-bottom: 4px; }
+
