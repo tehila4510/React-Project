@@ -4,10 +4,6 @@ const baseQuery = fetchBaseQuery({
   baseUrl: 'https://localhost:7185/api',
  prepareHeaders: (headers, { getState }) => {
   const state = getState();
-
-  console.log("REDUX TOKEN:", state.user?.token);
-  console.log("LOCAL TOKEN:", localStorage.getItem("token"));
-
   const token = state.user?.token;
 
   if (token) {

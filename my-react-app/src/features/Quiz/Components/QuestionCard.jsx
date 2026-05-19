@@ -12,35 +12,48 @@ const LEVEL_LABELS = {
 
 export default function QuestionCard({ question, selectedOption, onSelect, feedback, submitted }) {
   if (!question) return null;
+const getOptionClass = (opt) => {
+  let cls = 'option-btn';
 
-  const getOptionClass = (opt) => {
-    let cls = 'option-btn';
-
-    if (!submitted) {
-      if (selectedOption === opt.optionId) cls += ' selected';
-      return cls;
-    }
-
-    if (opt.isCorrect) {
-      cls += ' reveal-correct'; 
-    }
-    if (selectedOption === opt.optionId && !opt.isCorrect) {
-      cls += ' wrong'; 
-    }
-    if (selectedOption === opt.optionId && opt.isCorrect) {
-      cls = 'option-btn correct';
-    }
+  // 1. מצב בחירה (לפני לחיצה על Submit)
+  if (!submitted) {
+    if (selectedOption === opt.optionId) cls += ' selected';
     return cls;
-  };
+  }
 
-  const getOptionIcon = (opt) => {
-    if (!submitted) return null;
-    if (opt.isCorrect) return <span className="option-icon">✅</span>;
-    if (selectedOption === opt.optionId && !opt.isCorrect)
-      return <span className="option-icon">❌</span>;
-    return null;
-  };
+  // 2. מצב פידבק (אחרי לחיצה על Submit)
+  // נבדוק אם האופציה הנוכחית היא זו שהמשתמש בחר
+  const isSelected = selectedOption === opt.optionId;
+  
+  // נסתמך על הפידבק שהגיע מהשרת
+  if (isSelected) {
+    return feedback?.isCorrect ? 'option-btn correct' : 'option-btn wrong';
+  }
 
+  // אם זו לא האופציה שנבחרה, אבל השרת אמר שהיא הנכונה (חשיפת התשובה הנכונה במקרה של טעות)
+  if (opt.isCorrect) {
+    return 'option-btn correct';
+  }
+
+  return cls;
+};
+
+const getOptionIcon = (opt) => {
+  if (!submitted || !feedback) return null;
+
+  const isSelected = selectedOption === opt.optionId;
+
+  if (isSelected) {
+    return feedback.isCorrect ? 
+      <span className="option-icon">✅</span> : 
+      <span className="option-icon">❌</span>;
+  }
+  
+  // חשיפת ה-V על התשובה הנכונה גם אם לא בחרנו בה
+  if (opt.isCorrect) return <span className="option-icon">✅</span>;
+
+  return null;
+};
   return (
     <div className="quiz-card">
       {/* רמת קושי */}

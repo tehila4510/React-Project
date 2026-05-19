@@ -162,7 +162,19 @@ export default function QuizPage({ skill, onClose }) {
     initSession();
     // eslint-disable-next-line
   }, []);
+useEffect(() => {
+  const handleBeforeUnload = (e) => {
+    e.preventDefault();
+    e.returnValue = "Are you sure you want to log out? Your progress in this session will be deleted."; 
+       return e.returnValue;
+  };
 
+  window.addEventListener("beforeunload", handleBeforeUnload);
+
+  return () => {
+    window.removeEventListener("beforeunload", handleBeforeUnload);
+  };
+}, []);
   return (
     <>
       <div className="quiz-wrapper">
