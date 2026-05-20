@@ -188,3 +188,388 @@
 
   .feedback-title { font-weight: 800; font-size: 18px; margin-bottom: 4px; }
 
+/* פריסת ה-Header החדש */
+.quiz-header-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 680px;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.quiz-close-x {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--q-text-muted);
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s;
+}
+.quiz-close-x:hover { color: var(--q-text); }
+
+.quiz-progress-track {
+  flex: 1;
+  height: 14px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.quiz-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #4f46e5);
+  border-radius: 999px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.quiz-hearts-display {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  font-size: 18px;
+  background: #fff;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--q-border);
+}
+
+/* אנימציית רטט ללבבות */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+.heart-shake {
+  animation: shake 0.5s ease-in-out;
+  color: var(--q-error);
+}
+
+/* פאנל פידבק תחתון קבוע */
+.feedback-fixed-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24px;
+  box-shadow: 0 -10px 25px -5px rgba(0,0,0,0.05);
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 100;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.feedback-banner-inner {
+  max-width: 680px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.feedback-fixed-banner.is-correct { background-color: #d1fae5; border-top: 2px solid #10b981; }
+.feedback-fixed-banner.is-wrong { background-color: #fee2e2; border-top: 2px solid #ef4444; }
+
+.feedback-status-group { display: flex; align-items: center; gap: 16px; }
+
+.feedback-status-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 20px;
+}
+.is-correct .feedback-status-icon { background: #10b981; color: white; }
+.is-wrong .feedback-status-icon { background: #ef4444; color: white; }
+
+.feedback-status-title { font-size: 18px; font-weight: 700; margin: 0; }
+.is-correct .feedback-status-title { color: #065f46; }
+.is-wrong .feedback-status-title { color: #991b1b; }
+
+.feedback-explanation-text { font-size: 14px; margin: 4px 0 0 0; color: #374151; }
+
+.feedback-next-action-btn {
+  padding: 14px 28px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  color: white;
+  transition: opacity 0.2s;
+}
+.is-correct .feedback-next-action-btn { background: #10b981; }
+.is-wrong .feedback-next-action-btn { background: #ef4444; }
+.feedback-next-action-btn:hover { opacity: 0.9; }
+
+/* שדות טקסט לשאלות פתוחות */
+.text-input-container { margin-top: 16px; }
+.quiz-text-input {
+  width: 100%;
+  padding: 16px;
+  font-size: 16px;
+  border: 2px solid var(--q-border);
+  border-radius: 12px;
+  outline: none;
+  transition: all 0.2s;
+}
+.quiz-text-input:focus { border-color: var(--q-primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+.quiz-text-input.correct { border-color: var(--q-success); background-color: #f0fdf4; }
+.quiz-text-input.wrong { border-color: var(--q-error); background-color: #fef2f2; }
+
+.correct-answer-reveal {
+  margin-top: 16px;
+  padding: 12px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border-right: 4px solid var(--q-success);
+  font-size: 15px;
+}
+.reveal-label { color: var(--q-text-muted); margin-left: 8px; }
+.reveal-value { font-weight: 700; color: var(--q-success); }
+
+
+
+/* --- עיצוב כללי למכולה של השאלה --- */
+.quiz-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+    margin: 20px auto;
+    max-width: 600px;
+    transition: all 0.3s ease;
+}
+
+/* --- 1. עיצוב שאלות אמריקאיות (Multiple Choice) --- */
+.multiple-choice-mode .options-grid {
+    display: grid;
+    gap: 12px;
+}
+
+.opt-btn {
+    border: 2px solid #e0e0e0;
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 16px;
+    transition: 0.2s;
+}
+
+.opt-btn.selected { border-color: #1cb0f6; background-color: #ddf4ff; }
+.opt-btn.correct { border-color: #78c800; background-color: #d7ffb8; }
+.opt-btn.wrong { border-color: #ff4b4b; background-color: #ffdada; }
+
+/* --- 2. עיצוב הבנת הנקרא / שמע (Listening/Reading) --- */
+.listening-mode {
+    border-left: 8px solid #ce82ff; /* צבע סגול ייחודי */
+}
+
+.context-box {
+    background: #f8f8f8;
+    padding: 15px;
+    border-radius: 10px;
+    font-style: italic;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.audio-play-btn {
+    background: #ce82ff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 50px;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+/* --- 3. עיצוב סידור מילים (Ordering) --- */
+.ordering-mode .words-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.word-bubble {
+    background: #fff;
+    border: 2px solid #e5e5e5;
+    padding: 8px 16px;
+    border-radius: 12px;
+    box-shadow: 0 4px 0 #e5e5e5;
+    font-weight: bold;
+    color: #4b4b4b;
+}
+
+.order-input {
+    width: 100%;
+    min-height: 80px;
+    border: 2px dashed #ccc;
+    border-radius: 12px;
+    padding: 12px;
+    font-family: inherit;
+    resize: none;
+}
+
+/* --- 4. עיצוב תרגום (Translation) --- */
+.translation-mode .hebrew-prompt {
+    font-size: 24px;
+    font-weight: bold;
+    color: #4b4b4b;
+    text-align: right; /* יישור לימין */
+    margin-bottom: 10px;
+}
+
+.translation-divider {
+    text-align: center;
+    color: #afafaf;
+    font-size: 14px;
+    margin: 15px 0;
+    position: relative;
+}
+
+.translation-divider::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 50%; width: 40%; height: 1px; background: #eee;
+}
+
+/* --- 5. עיצוב הגייה (Pronunciation) --- */
+.speech-mode {
+    text-align: center;
+}
+
+.target-word {
+    font-size: 32px;
+    color: #1cb0f6;
+    font-weight: 800;
+    margin: 20px 0;
+}
+
+.mic-btn {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: none;
+    background: #ff4b4b;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+    box-shadow: 0 0 0 0 rgba(255, 75, 75, 0.4);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 75, 75, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(255, 75, 75, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 75, 75, 0); }
+}
+
+.matching-mode .options-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.match-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  text-align: left;
+  width: 100%;
+}
+
+.match-phrase {
+  font-weight: 700;
+  color: #4f46e5;
+  min-width: 100px;
+}
+
+.match-arrow {
+  color: #94a3b8;
+  font-size: 18px;
+}
+
+.match-meaning {
+  color: #1e293b;
+}
+
+==========================================================
+
+.drop-zone {
+  min-height: 60px;
+  border: 2px dashed #6366f1;
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+  background: #f5f3ff;
+  align-items: center;
+}
+ 
+.drop-placeholder {
+  color: #a5b4fc;
+  font-size: 14px;
+  font-style: italic;
+  margin: auto;
+}
+ 
+.word-bubble.selected {
+  background: #6366f1;
+  color: white;
+  border-color: #4f46e5;
+  box-shadow: 0 4px 0 #4338ca;
+}
+ 
+.reset-btn {
+  background: none;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 6px 14px;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 13px;
+  margin-top: 8px;
+}
+.reset-btn:hover { color: #475569; border-color: #cbd5e1; }
+ 
+.match-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  text-align: left;
+  width: 100%;
+}
+.match-left  { font-weight: 700; color: #4f46e5; min-width: 100px; }
+.match-arrow { color: #94a3b8; font-size: 18px; }
+.match-right { color: #1e293b; }
+ 
+.options-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+ 
+.multi-hint {
+  font-size: 12px;
+  color: #94a3b8;
+  text-align: center;
+  margin-top: 16px;
+}
